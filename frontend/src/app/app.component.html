@@ -1,0 +1,14 @@
+<div>
+    <p>Here are the available schemas. Pick one</p>
+    @for (schema of documentSchemas; track schema.id) {
+        <p>
+            {{ schema.id }}
+        </p>
+        <p>
+            {{ schema.dataSchema || 'empty schema' }}
+        </p>
+        <p>
+            {{ schema.uiSchema || 'empty schema' }}
+        </p>
+    }
+</div>

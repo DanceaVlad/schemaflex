@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 
 import { Injectable } from '@angular/core';
 
+import { Observable, map } from 'rxjs';
+
 import { ApiResponse } from '../data/ApiResponse';
 import { DocumentSchema } from '../data/DocumentSchema';
 
@@ -13,7 +15,7 @@ export class SchemaService {
 
     constructor(private readonly http: HttpClient) {}
 
-    getAllDocumentSchemas() {
-        return this.http.get<ApiResponse<DocumentSchema[]>>(this.apiUrl + 'all-schemas');
+    getAllDocumentSchemas(): Observable<DocumentSchema[]> {
+        return this.http.get<ApiResponse<DocumentSchema[]>>(this.apiUrl + 'all-schemas').pipe(map((response) => response.data));
     }
 }
