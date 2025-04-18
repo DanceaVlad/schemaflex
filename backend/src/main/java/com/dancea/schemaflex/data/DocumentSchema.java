@@ -11,6 +11,7 @@ import lombok.Setter;
 @Builder
 public class DocumentSchema {
     private Integer id;
+    private String name;
     private JsonNode dataSchema;
     private JsonNode uiSchema;
 }

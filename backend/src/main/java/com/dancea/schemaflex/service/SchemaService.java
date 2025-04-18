@@ -45,6 +45,7 @@ public class SchemaService {
 
         for (File dataFile : listOfDataFiles) {
             String filename = dataFile.getName();
+            String schemaName = filename.substring(0, filename.lastIndexOf('-'));
             int schemaId = getSchemaId(filename);
             File uiFile = findMatchingUiFile(listOfUiFiles, schemaId);
 
@@ -58,6 +59,7 @@ public class SchemaService {
 
                 DocumentSchema documentSchema = DocumentSchema.builder()
                         .id(schemaId)
+                        .name(schemaName)
                         .dataSchema(dataSchema)
                         .uiSchema(uiSchema)
                         .build();
