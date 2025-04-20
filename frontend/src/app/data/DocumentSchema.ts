@@ -1,6 +1,8 @@
+import { JsonSchema, UISchemaElement } from '@jsonforms/core';
+
 export interface DocumentSchema {
     id: number;
     name: string;
-    dataSchema: Record<string, any>;
-    uiSchema: Record<string, any>;
+    dataSchema: JsonSchema;
+    uiSchema: UISchemaElement;
 }

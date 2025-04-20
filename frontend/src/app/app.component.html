@@ -1,7 +1,11 @@
 <div>
     <mat-tab-group>
         @for (schema of documentSchemas; track schema.id) {
-            <mat-tab [label]="schema.name"> Here will come the form corresponding to schema "{{ schema.name }}"</mat-tab>
+            <mat-tab [label]="schema.name">
+                @if (schema.dataSchema && schema.uiSchema) {
+                    <jsonforms [schema]="schema.dataSchema" [uischema]="schema.uiSchema" [data]="data" [renderers]="renderers" [i18n]="i18n" [ajv]="ajv"></jsonforms>
+                }
+            </mat-tab>
         }
     </mat-tab-group>
 </div>
