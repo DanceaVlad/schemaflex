@@ -4,7 +4,8 @@
             @for (schema of documentSchemas; track schema.id) {
                 <mat-tab [label]="schema.name">
                     @if (schema.dataSchema && schema.uiSchema) {
-                        <jsonforms [schema]="schema.dataSchema" [uischema]="schema.uiSchema" [data]="data" [renderers]="renderers"></jsonforms>
+                        <jsonforms [schema]="schema.dataSchema" [uischema]="schema.uiSchema" [data]="data" [(data)]="data" [renderers]="renderers"></jsonforms>
+                        <button mat-raised-button color="primary" (click)="onSave(schema.id)">Save Document</button>
                     }
                 </mat-tab>
             }

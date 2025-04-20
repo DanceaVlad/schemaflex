@@ -5,8 +5,11 @@ import { MatTabsModule } from '@angular/material/tabs';
 
 import { JsonFormsModule } from '@jsonforms/angular';
 import { JsonFormsAngularMaterialModule, angularMaterialRenderers } from '@jsonforms/angular-material';
+import { ToastrService } from 'ngx-toastr';
 
 import { DocumentSchema } from './data/DocumentSchema';
+import { SaveDocumentRequest } from './data/SaveDocumentRequest';
+import { DocumentService } from './services/document.service';
 import { SchemaService } from './services/schema.service';
 
 @Component({
@@ -22,44 +25,30 @@ export class AppComponent implements OnInit {
 
     renderers = angularMaterialRenderers;
 
-    data = {
-        orders: [
-            {
-                customer: {
-                    id: '471201',
-                    name: 'Sirius Cybernetics Corporation',
-                    department: 'Complaints Division',
-                    phone: '(12) 34 56 78 90',
-                },
-                title: '42 killer robots',
-                ordered: true,
-                processId: 1890004498,
-                assignee: 'Philip J. Fry',
-                status: 'ordered',
-                startDate: '2018-06-01',
-                endDate: '2018-08-01',
-            },
-            {
-                customer: {
-                    id: '471202',
-                    name: 'Very Big Corporation of America',
-                    phone: '+49 123 456 789',
-                },
-                title: '1000 gallons of MomCorp Oil',
-                processId: 1890004499,
-                assignee: 'Jen Barber',
-                startDate: '2018-07-01',
-                status: 'planned',
-            },
-        ],
-    };
+    data = {};
 
-    constructor(private schemaService: SchemaService) {}
+    constructor(
+        private schemaService: SchemaService,
+        private documentService: DocumentService,
+        private toastr: ToastrService
+    ) {}
 
     ngOnInit(): void {
         this.schemaService.getAllDocumentSchemas().subscribe({
             next: (response) => {
                 this.documentSchemas = response.sort((a, b) => a.id - b.id);
+            },
+        });
+    }
+
+    onSave(schemaId: number) {
+        const payload: SaveDocumentRequest = {
+            schemaId: schemaId,
+            data: this.data,
+        };
+        this.documentService.saveDocument(payload).subscribe({
+            next: (response) => {
+                this.toastr.success('Document saved successfully', 'Success');
             },
         });
     }
