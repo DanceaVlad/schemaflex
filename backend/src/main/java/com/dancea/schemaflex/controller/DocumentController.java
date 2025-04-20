@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dancea.schemaflex.data.ApiResponse;
 import com.dancea.schemaflex.data.SaveDocumentRequest;
 import com.dancea.schemaflex.errors.GlobalExceptionHandler;
+import com.dancea.schemaflex.errors.InvalidJsonException;
+import com.dancea.schemaflex.errors.JsonFileNotFoundException;
 import com.dancea.schemaflex.service.DocumentService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,14 +24,25 @@ import lombok.RequiredArgsConstructor;
 public class DocumentController {
     private final DocumentService documentService;
 
+    /*
+     * This method saves a document based on the provided SaveDocumentRequest.
+     *
+     * @param saveDocumentRequest The request object containing the document data to
+     * be saved.
+     *
+     * @return ResponseEntity indicating the success or failure of the operation.
+     */
     @PostMapping("/save-document")
     public ResponseEntity<ApiResponse<Void>> saveDocument(@RequestBody SaveDocumentRequest saveDocumentRequest) {
         try {
             documentService.saveDocument(saveDocumentRequest);
             return GlobalExceptionHandler.buildSuccessResponse();
-        } catch (Exception e) {
+        } catch (JsonFileNotFoundException e) {
             return GlobalExceptionHandler.buildErrorResponse(
-                    Map.of("ERROR", e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+                    Map.of("SCHEMA_NOT_FOUND", e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (InvalidJsonException e) {
+            return GlobalExceptionHandler.buildErrorResponse(
+                    Map.of("INVALID_JSON", e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

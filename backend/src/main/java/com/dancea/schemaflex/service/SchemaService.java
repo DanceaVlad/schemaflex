@@ -73,6 +73,40 @@ public class SchemaService {
     }
 
     /*
+     * This method fetches the data schema based on the provided schema ID.
+     * It searches through the data schema files in the specified directory.
+     * If a matching file is found, it reads and returns the JSON content.
+     * If no matching file is found, an exception is thrown.
+     *
+     * @param id The schema ID to search for.
+     *
+     * @return The JSON content of the matching data schema file.
+     */
+    public JsonNode getDataSchemaById(Integer id) {
+        ObjectMapper mapper = new ObjectMapper();
+        File folder = new File(SCHEMA_PATH);
+        File[] listOfDataFiles = folder.listFiles((dir, name) -> name.endsWith(".json") && !name.contains("-ui-"));
+
+        if (listOfDataFiles == null) {
+            throw new JsonFileNotFoundException("No JSON files found in the schema directory.");
+        }
+
+        for (File dataFile : listOfDataFiles) {
+            String filename = dataFile.getName();
+            int schemaId = getSchemaId(filename);
+
+            if (schemaId == id) {
+                try {
+                    return mapper.readTree(dataFile);
+                } catch (Exception e) {
+                    throw new InvalidJsonException("Error reading JSON file: " + e.getMessage());
+                }
+            }
+        }
+        throw new JsonFileNotFoundException("No JSON file found with ID: " + id);
+    }
+
+    /*
      * This method extracts the schema ID from the filename.
      * It assumes the ID is located between the last '-' and the last '.' in the
      * filename.
