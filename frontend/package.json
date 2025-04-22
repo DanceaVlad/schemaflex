@@ -25,6 +25,7 @@
         "@jsonforms/core": "^3.5.1",
         "@jsonforms/examples": "^3.5.1",
         "@jsonforms/material-renderers": "^3.5.1",
+        "bootstrap": "^5.3.5",
         "libphonenumber-js": "^1.12.7",
         "ngx-toastr": "^19.0.0",
         "random-words": "^2.0.1",
