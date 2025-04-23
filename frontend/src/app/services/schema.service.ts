@@ -19,7 +19,6 @@ export class SchemaService {
         return this.http.get<ApiResponse<DocumentSchema[]>>(this.apiUrl + 'all-schemas').pipe(map((response) => response.data));
     }
     getDocumentSchemaById(id: number): Observable<DocumentSchema> {
-        console.log('Fetching schema with ID:', id);
         return this.http.get<ApiResponse<DocumentSchema>>(this.apiUrl + 'schema/' + id).pipe(map((response) => response.data));
     }
 }

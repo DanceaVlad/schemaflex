@@ -9,7 +9,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { CreateDocumentPageComponent } from './pages/create-document/create-document-page/create-document-page.component';
 import { SelectSchemaPageComponent } from './pages/create-document/select-schema-page/select-schema-page.component';
 import { HomeComponent } from './pages/home/home.component';
-import { ViewDocumentsPageComponent } from './pages/view-documents-page/view-documents-page.component';
+import { ViewDocumentsPageComponent } from './pages/view-documents/view-documents-page/view-documents-page.component';
 
 const routes: Routes = [
     { path: 'create-document/:id', component: CreateDocumentPageComponent },

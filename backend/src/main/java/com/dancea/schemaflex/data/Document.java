@@ -9,10 +9,16 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @Table(name = "_documents")
 public class Document {
 
