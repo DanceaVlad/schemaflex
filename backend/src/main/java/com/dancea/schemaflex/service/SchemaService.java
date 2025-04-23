@@ -73,6 +73,52 @@ public class SchemaService {
     }
 
     /*
+     * This method retrieves a specific document schema by its ID.
+     * If the schema ID is not found, an exception is thrown.
+     *
+     * @param schemaId The ID of the schema to retrieve.
+     *
+     * @return The DocumentSchema object containing the data and UI schemas.
+     */
+    public DocumentSchema getDocumentSchemaById(Integer id) {
+        ObjectMapper mapper = new ObjectMapper();
+        File folder = new File(SCHEMA_PATH);
+        File[] listOfDataFiles = folder.listFiles((dir, name) -> name.endsWith(".json") && !name.contains("-ui-"));
+        File[] listOfUiFiles = folder.listFiles((dir, name) -> name.endsWith(".json") && name.contains("-ui-"));
+
+        if (listOfDataFiles == null || listOfUiFiles == null) {
+            throw new JsonFileNotFoundException("No JSON files found in the schema directory.");
+        }
+
+        for (File dataFile : listOfDataFiles) {
+            String filename = dataFile.getName();
+            int schemaId = getSchemaId(filename);
+
+            if (schemaId == id) {
+                File uiFile = findMatchingUiFile(listOfUiFiles, schemaId);
+                if (uiFile == null) {
+                    throw new JsonFileNotFoundException("No matching UI file found for schema ID: " + schemaId);
+                }
+
+                try {
+                    JsonNode dataSchema = mapper.readTree(dataFile);
+                    JsonNode uiSchema = mapper.readTree(uiFile);
+
+                    return DocumentSchema.builder()
+                            .id(schemaId)
+                            .name(filename.substring(0, filename.lastIndexOf('-')))
+                            .dataSchema(dataSchema)
+                            .uiSchema(uiSchema)
+                            .build();
+                } catch (Exception e) {
+                    throw new InvalidJsonException("Error reading JSON files: " + e.getMessage());
+                }
+            }
+        }
+        throw new JsonFileNotFoundException("No JSON file found with ID: " + id);
+    }
+
+    /*
      * This method fetches the data schema based on the provided schema ID.
      * It searches through the data schema files in the specified directory.
      * If a matching file is found, it reads and returns the JSON content.

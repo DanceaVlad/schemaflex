@@ -1,0 +1,13 @@
+<div class="d-flex h-100 justify-content-center align-items-center">
+    @if (schema && schema.dataSchema && schema.uiSchema) {
+        <div class="jsonforms-wrapper">
+            <jsonforms [schema]="schema!.dataSchema" [uischema]="schema!.uiSchema" [(data)]="data" [renderers]="renderers"> </jsonforms>
+        </div>
+    }
+</div>
+
+<div class="position-absolute bottom-0 beginning-0 p-3" style="z-index: 2">
+    <button mat-fab color="primary" (click)="onSave()">
+        <mat-icon>save</mat-icon>
+    </button>
+</div>

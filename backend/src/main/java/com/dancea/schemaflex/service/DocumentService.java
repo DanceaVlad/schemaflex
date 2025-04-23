@@ -1,5 +1,7 @@
 package com.dancea.schemaflex.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.dancea.schemaflex.data.Document;
@@ -17,6 +19,15 @@ public class DocumentService {
 
     private final DocumentRepository documentRepository;
     private final SchemaService schemaService;
+
+    /*
+     * This method retrieves all documents from the database.
+     *
+     * @return List of Document objects.
+     */
+    public List<Document> getAllDocuments() {
+        return documentRepository.findAll();
+    }
 
     /*
      * This method saves a document based on the provided SaveDocumentRequest.
