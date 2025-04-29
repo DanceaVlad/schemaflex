@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import com.dancea.schemaflex.data.SaveDocumentRequest;
 import com.dancea.schemaflex.errors.GlobalExceptionHandler;
 import com.dancea.schemaflex.errors.InvalidJsonException;
 import com.dancea.schemaflex.errors.JsonFileNotFoundException;
+import com.dancea.schemaflex.errors.ResourceNotFoundException;
 import com.dancea.schemaflex.service.DocumentService;
 
 import lombok.RequiredArgsConstructor;
@@ -56,6 +58,24 @@ public class DocumentController {
         } catch (InvalidJsonException e) {
             return GlobalExceptionHandler.buildErrorResponse(
                     Map.of("INVALID_JSON", e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /*
+     * This method retrieves a specific document by its ID.
+     *
+     * @param documentId The ID of the document to retrieve.
+     *
+     * @return ResponseEntity containing the Document object.
+     */
+    @GetMapping("/{documentId}")
+    public ResponseEntity<ApiResponse<Document>> getDocumentById(@PathVariable("documentId") Integer documentId) {
+        try {
+            Document document = documentService.getDocumentById(documentId);
+            return GlobalExceptionHandler.buildSuccessResponse(document);
+        } catch (ResourceNotFoundException e) {
+            return GlobalExceptionHandler.buildErrorResponse(
+                    Map.of("RESOURCE_NOT_FOUND", e.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
 

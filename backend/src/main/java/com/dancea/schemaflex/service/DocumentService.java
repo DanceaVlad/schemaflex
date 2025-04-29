@@ -8,6 +8,7 @@ import com.dancea.schemaflex.data.Document;
 import com.dancea.schemaflex.data.SaveDocumentRequest;
 import com.dancea.schemaflex.errors.InvalidJsonException;
 import com.dancea.schemaflex.errors.JsonFileNotFoundException;
+import com.dancea.schemaflex.errors.ResourceNotFoundException;
 import com.dancea.schemaflex.repository.DocumentRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -57,6 +58,19 @@ public class DocumentService {
                         .schemaId(saveDocumentRequest.getSchemaId())
                         .data(saveDocumentRequest.getData().toString())
                         .build());
+    }
+
+    /*
+     * This method retrieves a specific document by its ID.
+     * If the document is not found, a 404 error is thrown.
+     *
+     * @param documentId The ID of the document to retrieve.
+     *
+     * @return Document object.
+     */
+    public Document getDocumentById(Integer documentId) {
+        return documentRepository.findById(documentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Document not found with ID: " + documentId));
     }
 
 }

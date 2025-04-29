@@ -67,13 +67,10 @@
     "type": "object",
     "properties": {
         "orders": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/order"
-            }
+            "$ref": "#/definitions/order"
         }
     },
     "required": [
-        "title"
+        "orders"
     ]
 }

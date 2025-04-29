@@ -23,6 +23,11 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(Map.of("SCHEMA_NOT_FOUND", e.getMessage()), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse<String>> handleResourceNotFound(ResourceNotFoundException e) {
+        return buildErrorResponse(Map.of("RESOURCE_NOT_FOUND", e.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
     public static <T> ResponseEntity<ApiResponse<T>> buildErrorResponse(Map<String, String> errors, HttpStatus status) {
         ErrorBody[] errorBodies = errors.entrySet().stream()
                 .map(entry -> new ErrorBody(entry.getKey(), entry.getValue()))
