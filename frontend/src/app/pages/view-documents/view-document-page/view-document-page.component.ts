@@ -45,7 +45,6 @@ export class ViewDocumentPageComponent implements OnInit {
             next: (document: Document) => {
                 this.document = document;
                 this.data = typeof document.data === 'string' ? JSON.parse(document.data) : document.data;
-                console.log('data:', this.data);
                 this.schemaService.getDocumentSchemaById(document.schemaId).subscribe({
                     next: (schema: DocumentSchema) => {
                         this.documentSchema = schema;
@@ -70,8 +69,6 @@ export class ViewDocumentPageComponent implements OnInit {
             id: this.document.id,
             data: JSON.stringify(this.data),
         };
-
-        console.log('payload:', payload);
 
         this.documentService.updateDocument(payload).subscribe({
             next: () => {
