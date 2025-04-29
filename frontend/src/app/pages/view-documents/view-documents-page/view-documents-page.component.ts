@@ -1,5 +1,7 @@
 import { Component, OnInit, inject, model, signal } from '@angular/core';
 
+import { RouterModule } from '@angular/router';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,7 +18,7 @@ export interface DialogData {
 
 @Component({
     selector: 'app-view-documents-page',
-    imports: [MatCardModule, MatIconModule, MatButtonModule],
+    imports: [MatCardModule, MatIconModule, MatButtonModule, RouterModule],
     templateUrl: './view-documents-page.component.html',
     styleUrl: './view-documents-page.component.scss',
     standalone: true,
@@ -43,7 +45,6 @@ export class ViewDocumentsPageComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((result) => {
-            console.log('The dialog was closed');
             if (result !== undefined) {
                 this.animal.set(result);
             }

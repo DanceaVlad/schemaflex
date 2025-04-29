@@ -10,7 +10,7 @@
             </mat-card-header>
             <mat-card-content>
                 <section class="button-container d-flex align-items-center justify-content-center">
-                    <button mat-raised-button color="primary">View</button>
+                    <button mat-raised-button color="primary" [routerLink]="['/view-document', document.id]">View</button>
                     <button mat-raised-button color="primary" (click)="openDialog()">Download</button>
                 </section>
             </mat-card-content>

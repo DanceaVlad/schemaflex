@@ -5,8 +5,7 @@ import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 
 import { ApiResponse } from '../data/ApiResponse';
-import { Document } from '../data/Document';
-import { SaveDocumentRequest } from '../data/SaveDocumentRequest';
+import { CreateDocumentRequest, Document, UpdateDocumentRequest } from '../data/Document';
 
 @Injectable({
     providedIn: 'root',
@@ -16,11 +15,19 @@ export class DocumentService {
 
     constructor(private readonly http: HttpClient) {}
 
-    saveDocument(payload: SaveDocumentRequest): Observable<ApiResponse> {
-        return this.http.post<ApiResponse>(this.apiUrl + 'save-document', payload);
+    createDocument(payload: CreateDocumentRequest): Observable<ApiResponse> {
+        return this.http.post<ApiResponse>(this.apiUrl + 'create-document', payload);
+    }
+
+    updateDocument(payload: UpdateDocumentRequest): Observable<ApiResponse> {
+        return this.http.patch<ApiResponse>(this.apiUrl + 'update-document', payload);
     }
 
     getAllDocuments(): Observable<Document[]> {
         return this.http.get<ApiResponse<Document[]>>(this.apiUrl + 'all-documents').pipe(map((response) => response.data));
+    }
+
+    getDocumentById(id: number): Observable<Document> {
+        return this.http.get<ApiResponse<Document>>(this.apiUrl + id).pipe(map((response) => response.data));
     }
 }
