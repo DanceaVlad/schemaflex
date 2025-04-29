@@ -28,6 +28,11 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(Map.of("RESOURCE_NOT_FOUND", e.getMessage()), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ApiResponse<String>> handleValidationException(ValidationException e) {
+        return buildErrorResponse(Map.of("VALIDATION_ERROR", e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
     public static <T> ResponseEntity<ApiResponse<T>> buildErrorResponse(Map<String, String> errors, HttpStatus status) {
         ErrorBody[] errorBodies = errors.entrySet().stream()
                 .map(entry -> new ErrorBody(entry.getKey(), entry.getValue()))

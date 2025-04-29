@@ -4,14 +4,16 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.dancea.schemaflex.data.ChangeDocumentRequest;
+import com.dancea.schemaflex.data.CreateDocumentRequest;
 import com.dancea.schemaflex.data.Document;
-import com.dancea.schemaflex.data.SaveDocumentRequest;
 import com.dancea.schemaflex.errors.InvalidJsonException;
 import com.dancea.schemaflex.errors.JsonFileNotFoundException;
 import com.dancea.schemaflex.errors.ResourceNotFoundException;
 import com.dancea.schemaflex.repository.DocumentRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -38,26 +40,47 @@ public class DocumentService {
      * @param saveDocumentRequest The request object containing the document data to
      * be saved.
      */
-    public void saveDocument(SaveDocumentRequest saveDocumentRequest) {
+    public void createDocument(CreateDocumentRequest createDocumentRequest) {
 
         try {
-            JsonNode dataSchema = schemaService.getDataSchemaById(saveDocumentRequest.getSchemaId());
+            JsonNode dataSchema = schemaService.getDataSchemaById(createDocumentRequest.getSchemaId());
         } catch (JsonFileNotFoundException e) {
-            throw new JsonFileNotFoundException("Schema not found for ID: " + saveDocumentRequest.getSchemaId());
+            throw new JsonFileNotFoundException("Schema not found for ID: " + createDocumentRequest.getSchemaId());
         } catch (InvalidJsonException e) {
             throw new InvalidJsonException("Invalid JSON data: " + e.getMessage());
         }
 
         // TODO: Validate the document data against the schema
         if (false) {
-            throw new InvalidJsonException("Document data does not match the schema.");
+            throw new ValidationException("Document data does not match the schema.");
         }
 
         documentRepository.save(
                 Document.builder()
-                        .schemaId(saveDocumentRequest.getSchemaId())
-                        .data(saveDocumentRequest.getData().toString())
+                        .schemaId(createDocumentRequest.getSchemaId())
+                        .data(createDocumentRequest.getData().toString())
                         .build());
+    }
+
+    public void updateDocument(ChangeDocumentRequest changeDocumentRequest) {
+        Document document = documentRepository.findById(changeDocumentRequest.getId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Document not found with ID: " + changeDocumentRequest.getId()));
+        try {
+            JsonNode dataSchema = schemaService.getDataSchemaById(document.getSchemaId());
+        } catch (JsonFileNotFoundException e) {
+            throw new JsonFileNotFoundException("Schema not found for ID: " + document.getSchemaId());
+        } catch (InvalidJsonException e) {
+            throw new InvalidJsonException("Invalid JSON data: " + e.getMessage());
+        }
+
+        // TODO: Validate the document data against the schema
+        if (false) {
+            throw new ValidationException("Document data does not match the schema.");
+        }
+
+        document.setData(changeDocumentRequest.getData().toString());
+        documentRepository.save(document);
     }
 
     /*
