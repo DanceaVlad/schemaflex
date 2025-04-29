@@ -30,7 +30,7 @@ public class Document {
     private Integer schemaId;
 
     @Lob
-    @Column(name = "data", unique = false, columnDefinition = "text", nullable = true, updatable = false)
+    @Column(name = "data", unique = false, columnDefinition = "text", nullable = true, updatable = true)
     private String data;
 
 }

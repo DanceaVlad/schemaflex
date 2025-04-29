@@ -62,6 +62,14 @@ public class DocumentService {
                         .build());
     }
 
+    /*
+     * This method updates a document based on the provided ChangeDocumentRequest.
+     * It fetches the schema based on the schema ID and validates the document data
+     * If the schema is not found or the data is invalid, an exception is thrown.
+     *
+     * @param changeDocumentRequest The request object containing the document data
+     * to be updated.
+     */
     public void updateDocument(ChangeDocumentRequest changeDocumentRequest) {
         Document document = documentRepository.findById(changeDocumentRequest.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(
