@@ -1,8 +1,9 @@
-import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
+import { Component, NO_ERRORS_SCHEMA, inject } from '@angular/core';
 
 import { Router } from '@angular/router';
 
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
 
 import { JsonFormComponent } from '../../../component/json-form/json-form.component';
@@ -15,6 +16,7 @@ import { CreateDocumentRequest } from '../../../data/Document';
 import { DocumentSchema } from '../../../data/DocumentSchema';
 import { DocumentService } from '../../../services/document.service';
 import { SchemaService } from '../../../services/schema.service';
+import { SaveDialogComponent } from '../save-dialog/save-dialog.component';
 
 @Component({
     selector: 'app-create-document-page',
@@ -27,6 +29,7 @@ import { SchemaService } from '../../../services/schema.service';
 export class CreateDocumentPageComponent {
     documentSchema: DocumentSchema | undefined;
     renderers = angularMaterialRenderers;
+    readonly dialog = inject(MatDialog);
 
     data: any = {};
 
@@ -53,20 +56,28 @@ export class CreateDocumentPageComponent {
         });
     }
 
-    onSave() {
-        if (!this.documentSchema) {
-            this.toastr.error('Schema not loaded', 'Error');
-            return;
-        }
-        const payload: CreateDocumentRequest = {
-            schemaId: this.documentSchema.id,
-            data: this.data,
-        };
-        this.documentService.createDocument(payload).subscribe({
-            next: (response) => {
-                this.toastr.success('Document created successfully', 'Success');
-                this.router.navigate(['/home']);
-            },
+    openDialog(): void {
+        const dialogRef = this.dialog.open(SaveDialogComponent);
+
+        dialogRef.afterClosed().subscribe((name: string) => {
+            if (name) {
+                const payload: CreateDocumentRequest = {
+                    name: name,
+                    schemaId: this.documentSchema!.id,
+                    data: this.data,
+                };
+
+                this.documentService.createDocument(payload).subscribe({
+                    next: () => {
+                        this.toastr.success('Document created successfully', 'Success');
+                        this.router.navigate(['/view-documents']);
+                    },
+                    error: (error) => {
+                        console.error('Error creating document:', error);
+                        this.toastr.error('Error creating document', 'Error');
+                    },
+                });
+            }
         });
     }
 }

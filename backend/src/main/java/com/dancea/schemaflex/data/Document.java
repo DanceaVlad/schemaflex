@@ -26,6 +26,9 @@ public class Document {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "name", unique = false, nullable = false, updatable = true)
+    private String name;
+
     @Column(name = "schema_id", unique = false, nullable = false, updatable = false)
     private Integer schemaId;
 

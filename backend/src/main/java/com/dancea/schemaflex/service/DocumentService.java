@@ -57,6 +57,7 @@ public class DocumentService {
 
         documentRepository.save(
                 Document.builder()
+                        .name(createDocumentRequest.getName().isEmpty() ? "Untitled" : createDocumentRequest.getName())
                         .schemaId(createDocumentRequest.getSchemaId())
                         .data(createDocumentRequest.getData().toString())
                         .build());

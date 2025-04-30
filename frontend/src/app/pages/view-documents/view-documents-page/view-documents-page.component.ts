@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, model, signal } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 
 import { RouterModule } from '@angular/router';
 
@@ -26,8 +26,6 @@ export interface DialogData {
 export class ViewDocumentsPageComponent implements OnInit {
     documents: Document[] = [];
     readonly dialog = inject(MatDialog);
-    readonly animal = signal('');
-    readonly name = model('');
 
     constructor(private documentService: DocumentService) {}
 
@@ -40,14 +38,6 @@ export class ViewDocumentsPageComponent implements OnInit {
     }
 
     openDialog(): void {
-        const dialogRef = this.dialog.open(DownloadDialogComponent, {
-            data: { name: this.name(), animal: this.animal() },
-        });
-
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result !== undefined) {
-                this.animal.set(result);
-            }
-        });
+        this.dialog.open(DownloadDialogComponent);
     }
 }

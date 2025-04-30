@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateDocumentRequest {
+    private String name;
     private Integer schemaId;
     private JsonNode data;
 }

@@ -3,7 +3,7 @@
         <mat-card class="card my-1" appearance="outlined">
             <mat-card-header>
                 <mat-card-title-group>
-                    <mat-card-title>Name not implemented</mat-card-title>
+                    <mat-card-title>{{ document.name }}</mat-card-title>
                     <mat-card-subtitle>SchemaId: {{ document.schemaId }}</mat-card-subtitle>
                     <mat-icon fontIcon="description"></mat-icon>
                 </mat-card-title-group>
@@ -15,5 +15,8 @@
                 </section>
             </mat-card-content>
         </mat-card>
+    }
+    @if (documents.length === 0) {
+        No documents available
     }
 </section>
