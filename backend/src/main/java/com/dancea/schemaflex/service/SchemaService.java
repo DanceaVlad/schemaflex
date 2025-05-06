@@ -18,6 +18,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SchemaService {
 
+    // TODO this should be configurable. Ideally, adding a schema should not require
+    // redeploying the application.
+    // TODO please make sure to include the RDA DMP common schema here for testing:
+    // https://github.com/RDA-DMP-Common/RDA-DMP-Common-Standard/blob/master/examples/JSON/JSON-schema/1.0/maDMP-schema-1.0.json
+
     private static final String SCHEMA_PATH = "src/main/resources/schemas/";
 
     /*
@@ -29,6 +34,7 @@ public class SchemaService {
      */
     public List<DocumentSchema> getAllDocumentSchemas() {
 
+        // TODO this seems to be a copied below. Please deduplicate this logic.
         ObjectMapper mapper = new ObjectMapper();
         File folder = new File(SCHEMA_PATH);
         File[] listOfDataFiles = folder.listFiles((dir, name) -> name.endsWith(".json") && !name.contains("-ui-"));
@@ -43,6 +49,8 @@ public class SchemaService {
 
         List<DocumentSchema> documentSchemas = new ArrayList<>();
 
+        // TODO this could potentially be more readable with streams. Consider if it is
+        // worth refactoring.
         for (File dataFile : listOfDataFiles) {
             String filename = dataFile.getName();
             String schemaName = filename.substring(0, filename.lastIndexOf('-'));
@@ -81,6 +89,7 @@ public class SchemaService {
      * @return The DocumentSchema object containing the data and UI schemas.
      */
     public DocumentSchema getDocumentSchemaById(Integer id) {
+        // TODO duplicated code from above.
         ObjectMapper mapper = new ObjectMapper();
         File folder = new File(SCHEMA_PATH);
         File[] listOfDataFiles = folder.listFiles((dir, name) -> name.endsWith(".json") && !name.contains("-ui-"));
@@ -90,6 +99,8 @@ public class SchemaService {
             throw new JsonFileNotFoundException("No JSON files found in the schema directory.");
         }
 
+        // TODO this could potentially be more readable with streams. Consider if it is
+        // worth refactoring.
         for (File dataFile : listOfDataFiles) {
             String filename = dataFile.getName();
             int schemaId = getSchemaId(filename);

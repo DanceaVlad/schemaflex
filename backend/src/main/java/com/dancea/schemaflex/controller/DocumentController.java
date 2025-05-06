@@ -26,6 +26,11 @@ import com.dancea.schemaflex.service.DocumentService;
 
 import lombok.RequiredArgsConstructor;
 
+// TODO it seems that this controller is not generated from an OpenAPI document or the OpenAPI document is missing.
+//      this means that the endpoint handling will need to be separately coded in the backend and the frontend. Part
+//      of this exercise is necessary to avoid duplicating work on the frontend and backend. Please find a way to
+//      generate both the frontend and the backend code from an OpenAPI document.
+
 @RestController
 @RequestMapping("/documents")
 @RequiredArgsConstructor
@@ -52,6 +57,12 @@ public class DocumentController {
      */
     @PostMapping("/create-document")
     public ResponseEntity<ApiResponse<Void>> createDocument(@RequestBody CreateDocumentRequest createDocumentRequest) {
+        // TODO: it seems that this code segment is repeated for every endpoint.
+        // This seems wasteful and should be handled globally, especially since it makes
+        // refactoring error handling harder.
+        // You may want to consider creating a parent class for all application
+        // exceptions and encode the logic
+        // to produce a HTTP output in that exception class.
         try {
             documentService.createDocument(createDocumentRequest);
             return GlobalExceptionHandler.buildSuccessResponse();

@@ -41,7 +41,7 @@ public class DocumentService {
      * be saved.
      */
     public void createDocument(CreateDocumentRequest createDocumentRequest) {
-
+        // TODO as noted elsewhere, this code seems duplicated.
         try {
             JsonNode dataSchema = schemaService.getDataSchemaById(createDocumentRequest.getSchemaId());
         } catch (JsonFileNotFoundException e) {
