@@ -11,9 +11,9 @@ import { CreateDocumentRequest, Document, UpdateDocumentRequest } from '../data/
     providedIn: 'root',
 })
 export class DocumentService {
-    private readonly apiUrl = 'http://localhost:8080/documents/';
+    private readonly apiUrl = '/documents/';
 
-    constructor(private readonly http: HttpClient) {}
+    constructor(private readonly http: HttpClient) { }
 
     createDocument(payload: CreateDocumentRequest): Observable<ApiResponse> {
         return this.http.post<ApiResponse>(this.apiUrl + 'create-document', payload);

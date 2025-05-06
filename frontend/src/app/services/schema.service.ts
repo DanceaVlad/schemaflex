@@ -11,9 +11,9 @@ import { DocumentSchema } from '../data/DocumentSchema';
     providedIn: 'root',
 })
 export class SchemaService {
-    private readonly apiUrl = 'http://localhost:8080/schemas/';
+    private readonly apiUrl = '/schemas/';
 
-    constructor(private readonly http: HttpClient) {}
+    constructor(private readonly http: HttpClient) { }
 
     getAllDocumentSchemas(): Observable<DocumentSchema[]> {
         return this.http.get<ApiResponse<DocumentSchema[]>>(this.apiUrl + 'all-schemas').pipe(map((response) => response.data));
