@@ -18,7 +18,10 @@ public class SecurityConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         // TODO this needs to be configurable later.
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200"));
+        corsConfiguration.setAllowedOrigins(List.of(
+                "http://localhost:4200", // dev
+                "http://localhost" // prod (port 80)
+        ));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
 
         corsConfiguration.setAllowedHeaders(List.of("*"));
