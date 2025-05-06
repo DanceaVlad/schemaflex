@@ -1,9 +1,12 @@
 package com.dancea.schemaflex.service;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Service;
 
 import com.dancea.schemaflex.data.DocumentSchema;
@@ -23,7 +26,10 @@ public class SchemaService {
     // TODO please make sure to include the RDA DMP common schema here for testing:
     // https://github.com/RDA-DMP-Common/RDA-DMP-Common-Standard/blob/master/examples/JSON/JSON-schema/1.0/maDMP-schema-1.0.json
 
-    private static final String SCHEMA_PATH = "src/main/resources/schemas/";
+    private static final String CLASSPATH_SCHEMAS = "classpath:schemas/*.json";
+
+    private final ObjectMapper mapper;
+    private final PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 
     /*
      * This method retrieves all document schemas from the specified directory.
@@ -33,51 +39,30 @@ public class SchemaService {
      * @return List of DocumentSchema objects containing data and UI schemas.
      */
     public List<DocumentSchema> getAllDocumentSchemas() {
+        Resource[] all = loadAllSchemaResources();
+        Map<Integer, Resource> dataFiles = new HashMap<>();
+        Map<Integer, Resource> uiFiles = new HashMap<>();
 
-        // TODO this seems to be a copied below. Please deduplicate this logic.
-        ObjectMapper mapper = new ObjectMapper();
-        File folder = new File(SCHEMA_PATH);
-        File[] listOfDataFiles = folder.listFiles((dir, name) -> name.endsWith(".json") && !name.contains("-ui-"));
-        File[] listOfUiFiles = folder.listFiles((dir, name) -> name.endsWith(".json") && name.contains("-ui-"));
-
-        if (listOfDataFiles == null || listOfUiFiles == null) {
-            throw new JsonFileNotFoundException("No JSON files found in the schema directory.");
-        }
-        if (listOfDataFiles.length != listOfUiFiles.length) {
-            throw new JsonFileNotFoundException("Mismatch between data and UI schema files.");
-        }
-
-        List<DocumentSchema> documentSchemas = new ArrayList<>();
-
-        // TODO this could potentially be more readable with streams. Consider if it is
-        // worth refactoring.
-        for (File dataFile : listOfDataFiles) {
-            String filename = dataFile.getName();
-            String schemaName = filename.substring(0, filename.lastIndexOf('-'));
-            int schemaId = getSchemaId(filename);
-            File uiFile = findMatchingUiFile(listOfUiFiles, schemaId);
-
-            if (uiFile == null) {
-                throw new JsonFileNotFoundException("No matching UI file found for schema ID: " + schemaId);
-            }
-
-            try {
-                JsonNode dataSchema = mapper.readTree(dataFile);
-                JsonNode uiSchema = mapper.readTree(uiFile);
-
-                DocumentSchema documentSchema = DocumentSchema.builder()
-                        .id(schemaId)
-                        .name(schemaName)
-                        .dataSchema(dataSchema)
-                        .uiSchema(uiSchema)
-                        .build();
-                documentSchemas.add(documentSchema);
-            } catch (Exception e) {
-                throw new InvalidJsonException("Error reading JSON files: " + e.getMessage());
-            }
+        for (Resource res : all) {
+            String name = Objects.requireNonNull(res.getFilename());
+            int id = extractId(name);
+            if (name.contains("-ui-"))
+                uiFiles.put(id, res);
+            else
+                dataFiles.put(id, res);
         }
 
-        return documentSchemas;
+        if (dataFiles.isEmpty() || uiFiles.isEmpty()) {
+            throw new JsonFileNotFoundException("No JSON files found in schemas folder.");
+        }
+        if (!dataFiles.keySet().equals(uiFiles.keySet())) {
+            throw new JsonFileNotFoundException("Mismatch between data and UI schema IDs.");
+        }
+
+        return dataFiles.keySet().stream()
+                .sorted()
+                .map(id -> loadDocumentSchema(id, dataFiles.get(id), uiFiles.get(id)))
+                .collect(Collectors.toList());
     }
 
     /*
@@ -89,118 +74,72 @@ public class SchemaService {
      * @return The DocumentSchema object containing the data and UI schemas.
      */
     public DocumentSchema getDocumentSchemaById(Integer id) {
-        // TODO duplicated code from above.
-        ObjectMapper mapper = new ObjectMapper();
-        File folder = new File(SCHEMA_PATH);
-        File[] listOfDataFiles = folder.listFiles((dir, name) -> name.endsWith(".json") && !name.contains("-ui-"));
-        File[] listOfUiFiles = folder.listFiles((dir, name) -> name.endsWith(".json") && name.contains("-ui-"));
-
-        if (listOfDataFiles == null || listOfUiFiles == null) {
-            throw new JsonFileNotFoundException("No JSON files found in the schema directory.");
-        }
-
-        // TODO this could potentially be more readable with streams. Consider if it is
-        // worth refactoring.
-        for (File dataFile : listOfDataFiles) {
-            String filename = dataFile.getName();
-            int schemaId = getSchemaId(filename);
-
-            if (schemaId == id) {
-                File uiFile = findMatchingUiFile(listOfUiFiles, schemaId);
-                if (uiFile == null) {
-                    throw new JsonFileNotFoundException("No matching UI file found for schema ID: " + schemaId);
-                }
-
-                try {
-                    JsonNode dataSchema = mapper.readTree(dataFile);
-                    JsonNode uiSchema = mapper.readTree(uiFile);
-
-                    return DocumentSchema.builder()
-                            .id(schemaId)
-                            .name(filename.substring(0, filename.lastIndexOf('-')))
-                            .dataSchema(dataSchema)
-                            .uiSchema(uiSchema)
-                            .build();
-                } catch (Exception e) {
-                    throw new InvalidJsonException("Error reading JSON files: " + e.getMessage());
-                }
-            }
-        }
-        throw new JsonFileNotFoundException("No JSON file found with ID: " + id);
+        List<DocumentSchema> all = getAllDocumentSchemas();
+        return all.stream()
+                .filter(ds -> ds.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new JsonFileNotFoundException("No JSON schema found with ID: " + id));
     }
 
-    /*
-     * This method fetches the data schema based on the provided schema ID.
-     * It searches through the data schema files in the specified directory.
-     * If a matching file is found, it reads and returns the JSON content.
-     * If no matching file is found, an exception is thrown.
-     *
-     * @param id The schema ID to search for.
-     *
-     * @return The JSON content of the matching data schema file.
+    /**
+     * Return just the data schema JSON by ID.
      */
     public JsonNode getDataSchemaById(Integer id) {
-        ObjectMapper mapper = new ObjectMapper();
-        File folder = new File(SCHEMA_PATH);
-        File[] listOfDataFiles = folder.listFiles((dir, name) -> name.endsWith(".json") && !name.contains("-ui-"));
-
-        if (listOfDataFiles == null) {
-            throw new JsonFileNotFoundException("No JSON files found in the schema directory.");
-        }
-
-        for (File dataFile : listOfDataFiles) {
-            String filename = dataFile.getName();
-            int schemaId = getSchemaId(filename);
-
-            if (schemaId == id) {
-                try {
-                    return mapper.readTree(dataFile);
-                } catch (Exception e) {
-                    throw new InvalidJsonException("Error reading JSON file: " + e.getMessage());
-                }
-            }
-        }
-        throw new JsonFileNotFoundException("No JSON file found with ID: " + id);
+        Resource data = loadAllSchemaResourcesAsList().stream()
+                .filter(r -> r.getFilename() != null
+                        && !r.getFilename().contains("-ui-")
+                        && extractId(r.getFilename()) == id)
+                .findFirst()
+                .orElseThrow(() -> new JsonFileNotFoundException("No data schema found with ID: " + id));
+        return readJson(data);
     }
 
-    /*
-     * This method extracts the schema ID from the filename.
-     * It assumes the ID is located between the last '-' and the last '.' in the
-     * filename.
-     *
-     * e.g., "schema-123.json" would yield 123.
-     *
-     * @param filename The name of the file from which to extract the schema ID.
-     *
-     * @return The extracted schema ID as an integer.
-     */
-    private int getSchemaId(String filename) {
-        String idString = filename.substring(filename.lastIndexOf('-') + 1, filename.lastIndexOf('.'));
+    // ─── Helpers
+
+    private Resource[] loadAllSchemaResources() {
         try {
-            return Integer.parseInt(idString);
-        } catch (NumberFormatException e) {
+            return resolver.getResources(CLASSPATH_SCHEMAS);
+        } catch (IOException e) {
+            throw new JsonFileNotFoundException("Could not load schema resources: " + e.getMessage());
+        }
+    }
+
+    private List<Resource> loadAllSchemaResourcesAsList() {
+        return Arrays.asList(loadAllSchemaResources());
+    }
+
+    private DocumentSchema loadDocumentSchema(int id, Resource dataRes, Resource uiRes) {
+        JsonNode data = readJson(dataRes);
+        JsonNode ui = readJson(uiRes);
+        String baseName = Objects.requireNonNull(dataRes.getFilename())
+                .replaceFirst("-\\d+\\.json$", "");
+        return DocumentSchema.builder()
+                .id(id)
+                .name(baseName)
+                .dataSchema(data)
+                .uiSchema(ui)
+                .build();
+    }
+
+    private JsonNode readJson(Resource res) {
+        try (InputStream in = res.getInputStream()) {
+            return mapper.readTree(in);
+        } catch (IOException e) {
+            throw new InvalidJsonException("Error reading JSON file "
+                    + res.getFilename() + ": " + e.getMessage());
+        }
+    }
+
+    /**
+     * Extract integer ID from filenames like "foo-123.json" or "foo-ui-123.json"
+     */
+    private int extractId(String filename) {
+        try {
+            String num = filename.substring(filename.lastIndexOf('-') + 1,
+                    filename.lastIndexOf('.'));
+            return Integer.parseInt(num);
+        } catch (Exception e) {
             throw new InvalidJsonException("Invalid schema ID in filename: " + filename);
         }
-    }
-
-    /*
-     * This method finds the UI file that matches the given schema ID.
-     * It assumes the UI file name contains the schema ID in the format
-     * "-ui-<schemaId>".
-     *
-     * @param uiFiles Array of UI files to search through.
-     *
-     * @param schemaId The schema ID to match against.
-     *
-     * @return The matching UI file, or null if no match is found.
-     */
-    private File findMatchingUiFile(File[] uiFiles, int schemaId) {
-        for (File uiFile : uiFiles) {
-            String filename = uiFile.getName();
-            if (filename.contains("-ui-" + schemaId)) {
-                return uiFile;
-            }
-        }
-        return null;
     }
 }
