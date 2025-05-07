@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 
 import { Observable, map } from 'rxjs';
 
+import { environment } from '../../environments/environment';
 import { ApiResponse } from '../data/ApiResponse';
 import { CreateDocumentRequest, Document, UpdateDocumentRequest } from '../data/Document';
 
@@ -11,7 +12,7 @@ import { CreateDocumentRequest, Document, UpdateDocumentRequest } from '../data/
     providedIn: 'root',
 })
 export class DocumentService {
-    private readonly apiUrl = '/documents/';
+    private readonly apiUrl = `${environment.apiBase}/documents/`;
 
     constructor(private readonly http: HttpClient) { }
 

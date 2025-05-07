@@ -4,14 +4,16 @@ import { Injectable } from '@angular/core';
 
 import { Observable, map } from 'rxjs';
 
+import { environment } from '../../environments/environment';
 import { ApiResponse } from '../data/ApiResponse';
 import { DocumentSchema } from '../data/DocumentSchema';
+
 
 @Injectable({
     providedIn: 'root',
 })
 export class SchemaService {
-    private readonly apiUrl = '/schemas/';
+    private readonly apiUrl = `${environment.apiBase}/schemas/`;
 
     constructor(private readonly http: HttpClient) { }
 
