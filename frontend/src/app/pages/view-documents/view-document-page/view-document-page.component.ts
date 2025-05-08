@@ -10,7 +10,7 @@ import { JsonFormComponent } from '../../../component/json-form/json-form.compon
 import { ToastrService } from 'ngx-toastr';
 
 import { Document } from '../../../data/Document';
-import { DocumentSchema } from '../../../data/DocumentSchema';
+import { Schema } from '../../../data/Schema';
 import { DocumentService } from '../../../services/document.service';
 import { SchemaService } from '../../../services/schema.service';
 
@@ -22,7 +22,7 @@ import { SchemaService } from '../../../services/schema.service';
 })
 export class ViewDocumentPageComponent implements OnInit {
     document: Document | undefined;
-    documentSchema: DocumentSchema | undefined;
+    schema: Schema | undefined;
     data: any = {};
 
     constructor(
@@ -45,9 +45,9 @@ export class ViewDocumentPageComponent implements OnInit {
             next: (document: Document) => {
                 this.document = document;
                 this.data = typeof document.data === 'string' ? JSON.parse(document.data) : document.data;
-                this.schemaService.getDocumentSchemaById(document.schemaId).subscribe({
-                    next: (schema: DocumentSchema) => {
-                        this.documentSchema = schema;
+                this.schemaService.getSchemaById(document.schemaId).subscribe({
+                    next: (schema: Schema) => {
+                        this.schema = schema;
                     },
                 });
             },
@@ -60,7 +60,7 @@ export class ViewDocumentPageComponent implements OnInit {
             return;
         }
 
-        if (!this.documentSchema) {
+        if (!this.schema) {
             this.toastr.error('Schema not loaded', 'Error');
             return;
         }

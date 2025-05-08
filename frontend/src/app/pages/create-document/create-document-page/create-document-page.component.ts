@@ -13,7 +13,7 @@ import { JsonFormsAngularMaterialModule, angularMaterialRenderers } from '@jsonf
 import { ToastrService } from 'ngx-toastr';
 
 import { CreateDocumentRequest } from '../../../data/Document';
-import { DocumentSchema } from '../../../data/DocumentSchema';
+import { Schema } from '../../../data/Schema';
 import { DocumentService } from '../../../services/document.service';
 import { SchemaService } from '../../../services/schema.service';
 import { SaveDialogComponent } from '../save-dialog/save-dialog.component';
@@ -27,7 +27,7 @@ import { SaveDialogComponent } from '../save-dialog/save-dialog.component';
     schemas: [NO_ERRORS_SCHEMA],
 })
 export class CreateDocumentPageComponent {
-    documentSchema: DocumentSchema | undefined;
+    schema: Schema | undefined;
     renderers = angularMaterialRenderers;
     readonly dialog = inject(MatDialog);
 
@@ -49,9 +49,9 @@ export class CreateDocumentPageComponent {
             return;
         }
 
-        this.schemaService.getDocumentSchemaById(schemaIdNumber).subscribe({
-            next: (schema: DocumentSchema) => {
-                this.documentSchema = schema;
+        this.schemaService.getSchemaById(schemaIdNumber).subscribe({
+            next: (schema: Schema) => {
+                this.schema = schema;
             },
         });
     }
@@ -63,7 +63,7 @@ export class CreateDocumentPageComponent {
             if (name) {
                 const payload: CreateDocumentRequest = {
                     name: name,
-                    schemaId: this.documentSchema!.id,
+                    schemaId: this.schema!.id,
                     data: this.data,
                 };
 

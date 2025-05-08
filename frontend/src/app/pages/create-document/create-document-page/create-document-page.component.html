@@ -1,5 +1,5 @@
-@if (documentSchema && documentSchema.dataSchema) {
-    <app-json-form [documentSchema]="documentSchema" [(data)]="data"></app-json-form>
+@if (schema && schema.dataSchema) {
+    <app-json-form [schema]="schema" [(data)]="data"></app-json-form>
 
     <div class="position-fixed bottom-0 beginning-0 p-3" style="z-index: 2">
         <button mat-fab color="primary" (click)="openDialog()">

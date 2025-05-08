@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, NO_ERRORS_SCHEMA, Output } from '@angul
 import { JsonFormsModule } from '@jsonforms/angular';
 import { JsonFormsAngularMaterialModule, angularMaterialRenderers } from '@jsonforms/angular-material';
 
-import { DocumentSchema } from '../../data/DocumentSchema';
+import { Schema } from '../../data/Schema';
 
 @Component({
     selector: 'app-json-form',
@@ -15,7 +15,7 @@ import { DocumentSchema } from '../../data/DocumentSchema';
 })
 export class JsonFormComponent {
     @Input({ required: true })
-    documentSchema: DocumentSchema | undefined;
+    schema: Schema | undefined;
     @Input()
     data = {};
     @Output()

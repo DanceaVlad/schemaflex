@@ -1,6 +1,7 @@
 package com.dancea.schemaflex.errors;
 
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,24 +14,18 @@ import com.dancea.schemaflex.data.ErrorBody;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(InvalidJsonException.class)
-    public ResponseEntity<ApiResponse<String>> handleInvalidJson(InvalidJsonException e) {
-        return buildErrorResponse(Map.of("INVALID_JSON", e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler(JsonFileNotFoundException.class)
-    public ResponseEntity<ApiResponse<String>> handleJsonFileNotFound(JsonFileNotFoundException e) {
-        return buildErrorResponse(Map.of("SCHEMA_NOT_FOUND", e.getMessage()), HttpStatus.NOT_FOUND);
-    }
+    Logger logger = Logger.getLogger(GlobalExceptionHandler.class.getName());
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiResponse<String>> handleResourceNotFound(ResourceNotFoundException e) {
+        logger.warning("Resource not found: " + e.getMessage());
         return buildErrorResponse(Map.of("RESOURCE_NOT_FOUND", e.getMessage()), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<ApiResponse<String>> handleValidationException(ValidationException e) {
-        return buildErrorResponse(Map.of("VALIDATION_ERROR", e.getMessage()), HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(SchemaProcessingException.class)
+    public ResponseEntity<ApiResponse<String>> handleSchemaProcessing(SchemaProcessingException e) {
+        logger.warning("Schema processing error: " + e.getMessage());
+        return buildErrorResponse(Map.of("SCHEMA_PROCESSING_ERROR", e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     public static <T> ResponseEntity<ApiResponse<T>> buildErrorResponse(Map<String, String> errors, HttpStatus status) {

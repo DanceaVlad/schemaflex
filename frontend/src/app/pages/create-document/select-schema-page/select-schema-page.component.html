@@ -1,6 +1,6 @@
 <section class="d-flex justify-content-center align-items-center flex-column h-100 w-100">
     <mat-list class="w-100 d-flex flex-column justify-content-center align-items-center">
-        @for (schema of documentSchemas; track schema.id) {
+        @for (schema of schemas; track schema.id) {
             <mat-list-item class="w-auto">
                 <button mat-raised-button color="primary" [routerLink]="['/create-document', schema.id]" routerLinkActive="active">
                     {{ schema.name }}

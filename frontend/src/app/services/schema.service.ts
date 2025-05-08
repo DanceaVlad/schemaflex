@@ -6,8 +6,7 @@ import { Observable, map } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { ApiResponse } from '../data/ApiResponse';
-import { DocumentSchema } from '../data/DocumentSchema';
-
+import { Schema } from '../data/Schema';
 
 @Injectable({
     providedIn: 'root',
@@ -15,12 +14,21 @@ import { DocumentSchema } from '../data/DocumentSchema';
 export class SchemaService {
     private readonly apiUrl = `${environment.apiBase}/schemas/`;
 
-    constructor(private readonly http: HttpClient) { }
+    constructor(private readonly http: HttpClient) {}
 
-    getAllDocumentSchemas(): Observable<DocumentSchema[]> {
-        return this.http.get<ApiResponse<DocumentSchema[]>>(this.apiUrl + 'all-schemas').pipe(map((response) => response.data));
+    getAllSchemas(): Observable<Schema[]> {
+        return this.http.get<ApiResponse<Schema[]>>(this.apiUrl + 'all-schemas').pipe(
+            map((response) => {
+                return response.data;
+            })
+        );
     }
-    getDocumentSchemaById(id: number): Observable<DocumentSchema> {
-        return this.http.get<ApiResponse<DocumentSchema>>(this.apiUrl + 'schema/' + id).pipe(map((response) => response.data));
+
+    getSchemaById(id: number): Observable<Schema> {
+        return this.http.get<ApiResponse<Schema>>(this.apiUrl + 'schema/' + id).pipe(
+            map((response) => {
+                return response.data;
+            })
+        );
     }
 }

@@ -19,8 +19,8 @@ export class Interceptor implements HttpInterceptor {
         return next.handle(req).pipe(
             catchError((error: HttpErrorResponse) => {
                 switch (error.error.errors[0].code) {
-                    case 'SCHEMA_NOT_FOUND':
-                        this.toastr.error(error.error.errors[0].message, 'Schema not found', {
+                    case 'RESOURCE_NOT_FOUND':
+                        this.toastr.error(error.error.errors[0].message, 'Resource not found', {
                             timeOut: 3000,
                             positionClass: 'toast-top-right',
                             progressBar: true,
@@ -29,7 +29,7 @@ export class Interceptor implements HttpInterceptor {
                             tapToDismiss: true,
                         });
                         break;
-                    case 'INVALID_JSON':
+                    case 'SCHEMA_PROCESSING_ERROR':
                         this.toastr.error(error.error.errors[0].message, 'Invalid Json', {
                             timeOut: 3000,
                             positionClass: 'toast-top-right',
@@ -41,6 +41,14 @@ export class Interceptor implements HttpInterceptor {
                         break;
 
                     default:
+                        this.toastr.error('An unknown error occurred', 'Error', {
+                            timeOut: 3000,
+                            positionClass: 'toast-top-right',
+                            progressBar: true,
+                            progressAnimation: 'increasing',
+                            closeButton: true,
+                            tapToDismiss: true,
+                        });
                         break;
                 }
 
