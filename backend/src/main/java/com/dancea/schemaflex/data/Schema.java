@@ -28,13 +28,13 @@ public class Schema {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name", unique = false, nullable = false, updatable = true)
+    @Column(name = "name", unique = false, nullable = false, updatable = false)
     private String name;
 
     @Lob
-    @Column(name = "ui_schema", unique = false, columnDefinition = "CLOB", nullable = true, updatable = true)
+    @Column(name = "ui_schema", unique = false, columnDefinition = "CLOB", nullable = true, updatable = false)
     private JsonNode uiSchema;
 
-    @Column(name = "data_schema", unique = false, columnDefinition = "CLOB", nullable = true, updatable = true)
+    @Column(name = "data_schema", unique = false, columnDefinition = "CLOB", nullable = false, updatable = false)
     private JsonNode dataSchema;
 }

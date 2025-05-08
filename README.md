@@ -54,6 +54,42 @@ To connect VSCode's debugger to the Spring Boot application:
 }
 ```
 
+To connect VSCode's debugger to the Angular application:
+
+1. Make sure the application is running with the dev profile
+2. Open Chrome with this command:
+
+```bash
+open -a "Google Chrome" --args --remote-debugging-port=9222 http://localhost:4200
+```
+
+3. Use the following launch configuration (in [frontend/.vscode/launch.json](fontend/.vscode/launch.json)):
+
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Attach to Angular in Docker",
+            "type": "chrome",
+            "request": "attach",
+            "url": "http://localhost:4200",
+            "port": 9222,
+
+            "webRoot": "${workspaceFolder}",
+
+            "sourceMaps": true,
+            "sourceMapPathOverrides": {
+                "webpack:///src/*": "${webRoot}/src/*",
+                "webpack:///./*": "${webRoot}/*",
+                "webpack:///*": "${webRoot}/*"
+            }
+        }
+    ]
+}
+
+```
+
 ## Requirements
 
 - [Docker Desktop](https://www.docker.com/)

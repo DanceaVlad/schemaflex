@@ -1,7 +1,8 @@
 <div class="d-flex h-100 justify-content-center align-items-center">
-    @if (schema && schema.dataSchema && schema.uiSchema) {
-        <div class="jsonforms-wrapper">
-            <jsonforms [schema]="schema!.dataSchema" [uischema]="schema!.uiSchema" [(data)]="data" [renderers]="renderers" (dataChange)="onDataChange($event)"> </jsonforms>
-        </div>
+    @if (schema && schema.dataSchema) {
+    <div class="jsonforms-wrapper">
+        <jsonforms [schema]="schema.dataSchema" [uiSchema]="schema.uiSchema" [(data)]="data" [renderers]="renderers"
+            (dataChange)="onDataChange($event)"> </jsonforms>
+    </div>
     }
 </div>

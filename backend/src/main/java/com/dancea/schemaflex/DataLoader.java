@@ -24,29 +24,9 @@ public class DataLoader implements CommandLineRunner {
     private SchemaRepository schemaRepository;
 
     private static final String CLASSPATH_SCHEMAS = "classpath:schemas/*.json";
+    private static final Logger logger = Logger.getLogger(DataLoader.class.getName());
     private final PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private static final Logger logger = Logger.getLogger(DataLoader.class.getName());
-
-    private Resource[] loadAllSchemaResources() {
-        try {
-            return resolver.getResources(CLASSPATH_SCHEMAS);
-        } catch (IOException e) {
-            throw new SchemaProcessingException("Failed to load schema resources");
-        }
-    }
-
-    private String extractSchemaName(String filename) {
-        if (filename == null || filename.isEmpty() || filename.indexOf(".json") == -1) {
-            throw new SchemaProcessingException("Invalid filename: " + filename);
-        }
-
-        if (filename.contains("-ui")) {
-            return filename.substring(0, filename.indexOf("-"));
-        } else {
-            return filename.substring(0, filename.indexOf("."));
-        }
-    }
 
     @Override
     public void run(String... args) throws Exception {
@@ -68,11 +48,8 @@ public class DataLoader implements CommandLineRunner {
             }
         }
 
-        if (dataFiles.isEmpty() || uiFiles.isEmpty()) {
+        if (dataFiles.isEmpty()) {
             throw new SchemaProcessingException("No JSON files found in schemas folder.");
-        }
-        if (!dataFiles.keySet().equals(uiFiles.keySet())) {
-            throw new SchemaProcessingException("Mismatch between data and UI schema names.");
         }
 
         for (String schemaName : dataFiles.keySet()) {
@@ -81,7 +58,7 @@ public class DataLoader implements CommandLineRunner {
                 Resource uiResource = uiFiles.get(schemaName);
 
                 JsonNode dataNode = objectMapper.readTree(dataResource.getInputStream());
-                JsonNode uiNode = objectMapper.readTree(uiResource.getInputStream());
+                JsonNode uiNode = uiResource == null ? null : objectMapper.readTree(uiResource.getInputStream());
 
                 Schema schema = Schema.builder()
                         .name(schemaName)
@@ -90,12 +67,31 @@ public class DataLoader implements CommandLineRunner {
                         .build();
 
                 schemaRepository.save(schema);
-                logger.info("Schema " + schemaName + " loaded successfully.");
+                logger.info(schemaName + " loaded successfully.");
             } catch (IOException e) {
                 throw new SchemaProcessingException("Failed to parse schema JSON for " + schemaName);
             }
         }
+    }
 
+    private Resource[] loadAllSchemaResources() {
+        try {
+            return resolver.getResources(CLASSPATH_SCHEMAS);
+        } catch (IOException e) {
+            throw new SchemaProcessingException("Failed to load schema resources");
+        }
+    }
+
+    private String extractSchemaName(String filename) {
+        if (filename == null || filename.isEmpty() || filename.indexOf(".json") == -1) {
+            throw new SchemaProcessingException("Invalid filename: " + filename);
+        }
+
+        if (filename.contains("-ui")) {
+            return filename.substring(0, filename.indexOf("-"));
+        } else {
+            return filename.substring(0, filename.indexOf("."));
+        }
     }
 
 }
