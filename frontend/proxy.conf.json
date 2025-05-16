@@ -1,0 +1,12 @@
+{
+    "/schemas": {
+        "target": "http://backend-dev:8080",
+        "secure": false,
+        "changeOrigin": true
+    },
+    "/documents": {
+        "target": "http://backend-dev:8080",
+        "secure": false,
+        "changeOrigin": true
+    }
+}

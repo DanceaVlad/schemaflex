@@ -1,0 +1,13 @@
+@if (schema && schema.dataSchema ) {
+<app-json-form [schema]="schema" [(data)]="data"></app-json-form>
+
+<div class="position-fixed bottom-0 beginning-0 p-3" style="z-index: 2">
+    <button mat-fab color="primary" (click)="openDialog()">
+        <mat-icon>save</mat-icon>
+    </button>
+</div>
+} @else {
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <h1>No Schema available</h1>
+</div>
+}

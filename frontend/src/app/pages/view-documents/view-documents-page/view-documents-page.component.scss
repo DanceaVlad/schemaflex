@@ -1,0 +1,21 @@
+.card {
+    width: auto;
+}
+
+.button-container {
+    button {
+        margin: 0 5px;
+        padding: 10px 10px;
+    }
+}
+
+mat-icon {
+    font-size: 25px;
+    padding: 0;
+    margin: 0;
+    transform: translateY(2.5px);
+}
+
+mat-card-content {
+    margin-top: 10px;
+}

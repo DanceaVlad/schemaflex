@@ -1,0 +1,98 @@
+{
+    "type": "VerticalLayout",
+    "elements": [
+        {
+            "type": "Group",
+            "label": "Order",
+            "elements": [
+                {
+                    "type": "HorizontalLayout",
+                    "elements": [
+                        {
+                            "type": "Control",
+                            "scope": "#/properties/orders/properties/title"
+                        },
+                        {
+                            "type": "Control",
+                            "scope": "#/properties/orders/properties/processId"
+                        }
+                    ]
+                },
+                {
+                    "type": "VerticalLayout",
+                    "elements": [
+                        {
+                            "type": "Control",
+                            "scope": "#/properties/orders/properties/assignee"
+                        },
+                        {
+                            "type": "HorizontalLayout",
+                            "elements": [
+                                {
+                                    "type": "Control",
+                                    "scope": "#/properties/orders/properties/startDate"
+                                },
+                                {
+                                    "type": "Control",
+                                    "scope": "#/properties/orders/properties/endDate"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Control",
+                            "scope": "#/properties/orders/properties/status"
+                        },
+                        {
+                            "type": "Control",
+                            "scope": "#/properties/orders/properties/ordered",
+                            "options": {
+                                "toggle": true
+                            }
+                        },
+                        {
+                            "type": "Control",
+                            "scope": "#/properties/orders/properties/amount",
+                            "options": {
+                                "slider": true
+                            },
+                            "rule": {
+                                "effect": "DISABLE",
+                                "condition": {
+                                    "scope": "#/properties/orders/properties/status",
+                                    "schema": {
+                                        "const": "unordered"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "Group",
+                    "label": "Customer",
+                    "elements": [
+                        {
+                            "type": "Control",
+                            "scope": "#/properties/orders/properties/customer/properties/name"
+                        },
+                        {
+                            "type": "Control",
+                            "scope": "#/properties/orders/properties/customer/properties/department"
+                        },
+                        {
+                            "type": "Control",
+                            "scope": "#/properties/orders/properties/customer/properties/emailAddress"
+                        }
+                    ]
+                },
+                {
+                    "type": "Control",
+                    "scope": "#/properties/orders/properties/description",
+                    "options": {
+                        "multi": true
+                    }
+                }
+            ]
+        }
+    ]
+}
