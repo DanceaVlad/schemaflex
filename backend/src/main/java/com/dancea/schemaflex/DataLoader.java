@@ -11,7 +11,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
-import com.dancea.schemaflex.data.Schema;
+import com.dancea.schemaflex.data.CustomSchema;
 import com.dancea.schemaflex.errors.SchemaProcessingException;
 import com.dancea.schemaflex.repository.SchemaRepository;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -60,7 +60,7 @@ public class DataLoader implements CommandLineRunner {
                 JsonNode dataNode = objectMapper.readTree(dataResource.getInputStream());
                 JsonNode uiNode = uiResource == null ? null : objectMapper.readTree(uiResource.getInputStream());
 
-                Schema schema = Schema.builder()
+                CustomSchema schema = CustomSchema.builder()
                         .name(schemaName)
                         .dataSchema(dataNode)
                         .uiSchema(uiNode)
