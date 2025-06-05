@@ -1,8 +1,10 @@
 # 1) build stage
 FROM maven:3.9-eclipse-temurin-21-alpine AS builder
 WORKDIR /app
-COPY pom.xml .
-COPY src ./src
+
+COPY openapi.yaml ./openapi.yaml
+COPY backend/pom.xml ./pom.xml
+COPY backend/src ./src
 RUN mvn clean package -DskipTests
 
 # 2) runtime stage
