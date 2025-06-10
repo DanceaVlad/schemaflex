@@ -29,15 +29,24 @@ public class SchemaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Schema with ID " + id + " not found"));
     }
 
-    public void createSchema(CreateSchemaRequest request) {
+    public com.dancea.schemaflex.api.model.CustomSchema createSchema(CreateSchemaRequest request) {
         JsonNode dataSchemaNode = objectMapper.convertValue(request.getDataSchema(), JsonNode.class);
         JsonNode uiSchemaNode = objectMapper.convertValue(request.getUiSchema(), JsonNode.class);
-        CustomSchema saved = schemaRepository.save(CustomSchema.builder()
+        CustomSchema savedSchema = schemaRepository.save(CustomSchema.builder()
                 .name(request.getSchemaName())
                 .dataSchema(dataSchemaNode)
                 .uiSchema(uiSchemaNode)
                 .build());
 
-        // TODO: Implement file saving logic
+        return com.dancea.schemaflex.api.model.CustomSchema.builder()
+                .id(savedSchema.getId())
+                .name(savedSchema.getName())
+                .dataSchema(objectMapper.convertValue(dataSchemaNode,
+                        new com.fasterxml.jackson.core.type.TypeReference<java.util.Map<String, Object>>() {
+                        }))
+                .uiSchema(objectMapper.convertValue(uiSchemaNode,
+                        new com.fasterxml.jackson.core.type.TypeReference<java.util.Map<String, Object>>() {
+                        }))
+                .build();
     }
 }

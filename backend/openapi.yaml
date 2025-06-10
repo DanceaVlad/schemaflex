@@ -56,6 +56,10 @@ paths:
       responses:
         '201':
           description: schema created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomSchema'
 
   /documents/all-documents:
     get:

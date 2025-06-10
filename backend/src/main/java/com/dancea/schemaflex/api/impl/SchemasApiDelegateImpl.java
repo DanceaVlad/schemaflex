@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +23,12 @@ public class SchemasApiDelegateImpl implements SchemasApiDelegate {
     private final ObjectMapper objectMapper;
 
     @Override
+    public ResponseEntity<CustomSchema> createSchema(CreateSchemaRequest createSchemaRequest) {
+        CustomSchema createdSchema = schemaService.createSchema(createSchemaRequest);
+        return ResponseEntity.created(null).body(createdSchema);
+    }
+
+    @Override
     public ResponseEntity<List<CustomSchema>> getAllSchemas() {
         List<CustomSchema> apiSchemas = schemaService.getAllSchemas()
                 .stream()
@@ -39,12 +44,6 @@ public class SchemasApiDelegateImpl implements SchemasApiDelegate {
         return ResponseEntity.ok(apiSchema);
     }
 
-    @Override
-    public ResponseEntity<Void> createSchema(CreateSchemaRequest createSchemaRequest) {
-        schemaService.createSchema(createSchemaRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
     private CustomSchema toApiSchema(com.dancea.schemaflex.data.CustomSchema s) {
         return CustomSchema.builder()
                 .id(s.getId())
@@ -55,7 +54,12 @@ public class SchemasApiDelegateImpl implements SchemasApiDelegate {
     }
 
     private Map<String, Object> convertToMap(Object schema) {
-        return objectMapper.convertValue(schema, new TypeReference<Map<String, Object>>() {
-        });
+        try {
+            return objectMapper.convertValue(schema, new TypeReference<Map<String, Object>>() {
+            });
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 }
