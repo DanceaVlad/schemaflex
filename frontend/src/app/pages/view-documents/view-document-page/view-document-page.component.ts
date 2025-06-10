@@ -30,7 +30,7 @@ export class ViewDocumentPageComponent implements OnInit {
         private documentService: DocumentService,
         private schemaService: SchemaService,
         private router: Router
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         const url = window.location.href;
@@ -67,7 +67,7 @@ export class ViewDocumentPageComponent implements OnInit {
 
         const payload = {
             id: this.document.id,
-            data: JSON.stringify(this.data),
+            data: this.data,
         };
 
         this.documentService.updateDocument(payload).subscribe({

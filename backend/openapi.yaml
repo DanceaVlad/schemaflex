@@ -106,8 +106,12 @@ paths:
       responses:
         '201':
           description: document created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
   /documents/update-document:
-    patch:
+    put:
       tags:
         - Documents
       summary: Update an existing document
@@ -117,10 +121,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChangeDocumentRequest'
+              $ref: '#/components/schemas/UpdateDocumentRequest'
       responses:
         '200':
           description: document updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
 
 components:
   schemas:
@@ -188,7 +196,7 @@ components:
         - schemaId
         - data
 
-    ChangeDocumentRequest:
+    UpdateDocumentRequest:
       type: object
       properties:
         id:

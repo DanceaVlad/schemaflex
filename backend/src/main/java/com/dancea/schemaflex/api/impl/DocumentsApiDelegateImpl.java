@@ -4,14 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.dancea.schemaflex.api.DocumentsApiDelegate;
-import com.dancea.schemaflex.api.model.ChangeDocumentRequest;
 import com.dancea.schemaflex.api.model.CreateDocumentRequest;
 import com.dancea.schemaflex.api.model.Document;
+import com.dancea.schemaflex.api.model.UpdateDocumentRequest;
 import com.dancea.schemaflex.service.DocumentService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,9 +24,12 @@ public class DocumentsApiDelegateImpl implements DocumentsApiDelegate {
     private final ObjectMapper objectMapper;
 
     @Override
-    public ResponseEntity<Void> createDocument(CreateDocumentRequest createDocumentRequest) {
-        documentService.createDocument(createDocumentRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<com.dancea.schemaflex.api.model.Document> createDocument(
+            CreateDocumentRequest createDocumentRequest) {
+        com.dancea.schemaflex.api.model.Document document = documentService.createDocument(createDocumentRequest);
+        return ResponseEntity.created(
+                null)
+                .body(document);
 
     }
 
@@ -76,9 +78,13 @@ public class DocumentsApiDelegateImpl implements DocumentsApiDelegate {
     }
 
     @Override
-    public ResponseEntity<Void> updateDocument(ChangeDocumentRequest changeDocumentRequest) {
-        documentService.updateDocument(changeDocumentRequest);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<com.dancea.schemaflex.api.model.Document> updateDocument(
+            UpdateDocumentRequest updateDocumentRequest) {
+        com.dancea.schemaflex.api.model.Document updatedDocument = documentService
+                .updateDocument(updateDocumentRequest);
+        return ResponseEntity.created(
+                null)
+                .body(updatedDocument);
 
     }
 }

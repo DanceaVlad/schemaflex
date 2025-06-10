@@ -129,7 +129,7 @@
                         <phase>generate-sources</phase>
                         <configuration>
                             <generatorName>spring</generatorName>
-                            <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/openapi.yaml</inputSpec>
                             <output>${project.build.directory}/generated-sources/openapi</output>
                             <apiPackage>com.dancea.schemaflex.api</apiPackage>
                             <modelPackage>com.dancea.schemaflex.api.model</modelPackage>
