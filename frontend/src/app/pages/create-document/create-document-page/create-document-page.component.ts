@@ -38,7 +38,7 @@ export class CreateDocumentPageComponent {
         private documentService: DocumentService,
         private toastr: ToastrService,
         private router: Router
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         const url = window.location.href;
@@ -71,10 +71,6 @@ export class CreateDocumentPageComponent {
                     next: () => {
                         this.toastr.success('Document created successfully', 'Success');
                         this.router.navigate(['/view-documents']);
-                    },
-                    error: (error) => {
-                        console.error('Error creating document:', error);
-                        this.toastr.error('Error creating document', 'Error');
                     },
                 });
             }

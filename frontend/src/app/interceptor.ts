@@ -13,14 +13,20 @@ export class Interceptor implements HttpInterceptor {
     constructor(
         private router: Router,
         private toastr: ToastrService
-    ) {}
+    ) { }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(req).pipe(
             catchError((error: HttpErrorResponse) => {
-                switch (error.error.errors[0].code) {
-                    case 'RESOURCE_NOT_FOUND':
-                        this.toastr.error(error.error.errors[0].message, 'Resource not found', {
+                // Handle backend error format: { "ERROR_TYPE": "message" }
+                if (error.error && typeof error.error === 'object' && !Array.isArray(error.error)) {
+                    const keys = Object.keys(error.error);
+                    if (keys.length > 0) {
+                        const errorType = keys[0];
+                        const message = error.error[errorType];
+                        let title = errorType.replace(/_/g, ' ').toLowerCase();
+                        title = title.charAt(0).toUpperCase() + title.slice(1);
+                        this.toastr.error(message, title, {
                             timeOut: 3000,
                             positionClass: 'toast-top-right',
                             progressBar: true,
@@ -28,30 +34,12 @@ export class Interceptor implements HttpInterceptor {
                             closeButton: true,
                             tapToDismiss: true,
                         });
-                        break;
-                    case 'SCHEMA_PROCESSING_ERROR':
-                        this.toastr.error(error.error.errors[0].message, 'Invalid Json', {
-                            timeOut: 3000,
-                            positionClass: 'toast-top-right',
-                            progressBar: true,
-                            progressAnimation: 'increasing',
-                            closeButton: true,
-                            tapToDismiss: true,
-                        });
-                        break;
-
-                    default:
-                        this.toastr.error('An unknown error occurred', 'Error', {
-                            timeOut: 3000,
-                            positionClass: 'toast-top-right',
-                            progressBar: true,
-                            progressAnimation: 'increasing',
-                            closeButton: true,
-                            tapToDismiss: true,
-                        });
-                        break;
+                    } else {
+                        this.toastr.error('An unknown error occurred', 'Error');
+                    }
+                } else {
+                    this.toastr.error('An unknown error occurred', 'Error');
                 }
-
                 return throwError(() => error);
             })
         );

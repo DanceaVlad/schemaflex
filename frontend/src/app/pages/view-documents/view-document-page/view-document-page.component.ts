@@ -75,10 +75,6 @@ export class ViewDocumentPageComponent implements OnInit {
                 this.toastr.success('Document updated successfully', 'Success');
                 this.router.navigate(['/home']);
             },
-            error: (error) => {
-                this.toastr.error('Failed to update document', 'Error');
-                this.router.navigate(['/home']);
-            },
         });
     }
 }
