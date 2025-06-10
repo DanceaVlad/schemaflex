@@ -25,42 +25,37 @@ public class SchemasApiDelegateImpl implements SchemasApiDelegate {
 
     @Override
     public ResponseEntity<List<CustomSchema>> getAllSchemas() {
-        List<com.dancea.schemaflex.data.CustomSchema> schemas = schemaService.getAllSchemas();
-        List<CustomSchema> apiSchemas = schemas.stream().map(s -> {
-            CustomSchema apiSchema = CustomSchema.builder()
-                    .id(s.getId())
-                    .name(s.getName())
-                    .dataSchema(objectMapper.convertValue(s.getDataSchema(), new TypeReference<Map<String, Object>>() {
-                    }))
-                    .uiSchema(objectMapper.convertValue(s.getUiSchema(), new TypeReference<Map<String, Object>>() {
-                    }))
-                    .build();
-            return apiSchema;
-        }).collect(Collectors.toList());
+        List<CustomSchema> apiSchemas = schemaService.getAllSchemas()
+                .stream()
+                .map(this::toApiSchema)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(apiSchemas);
-
     }
 
     @Override
     public ResponseEntity<CustomSchema> getSchemaById(Integer schemaId) {
         com.dancea.schemaflex.data.CustomSchema s = schemaService.getSchemaById(schemaId);
-        CustomSchema apiSchema = CustomSchema.builder()
-                .id(s.getId())
-                .name(s.getName())
-                .dataSchema(objectMapper.convertValue(s.getDataSchema(), new TypeReference<Map<String, Object>>() {
-                }))
-                .uiSchema(objectMapper.convertValue(s.getUiSchema(), new TypeReference<Map<String, Object>>() {
-                }))
-                .build();
-
+        CustomSchema apiSchema = toApiSchema(s);
         return ResponseEntity.ok(apiSchema);
-
     }
 
     @Override
     public ResponseEntity<Void> createSchema(CreateSchemaRequest createSchemaRequest) {
         schemaService.createSchema(createSchemaRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 
+    private CustomSchema toApiSchema(com.dancea.schemaflex.data.CustomSchema s) {
+        return CustomSchema.builder()
+                .id(s.getId())
+                .name(s.getName())
+                .dataSchema(convertToMap(s.getDataSchema()))
+                .uiSchema(convertToMap(s.getUiSchema()))
+                .build();
+    }
+
+    private Map<String, Object> convertToMap(Object schema) {
+        return objectMapper.convertValue(schema, new TypeReference<Map<String, Object>>() {
+        });
     }
 }

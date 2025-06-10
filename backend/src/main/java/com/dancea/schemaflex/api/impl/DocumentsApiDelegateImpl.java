@@ -24,67 +24,48 @@ public class DocumentsApiDelegateImpl implements DocumentsApiDelegate {
     private final ObjectMapper objectMapper;
 
     @Override
-    public ResponseEntity<com.dancea.schemaflex.api.model.Document> createDocument(
-            CreateDocumentRequest createDocumentRequest) {
-        com.dancea.schemaflex.api.model.Document document = documentService.createDocument(createDocumentRequest);
-        return ResponseEntity.created(
-                null)
-                .body(document);
-
+    public ResponseEntity<Document> createDocument(CreateDocumentRequest createDocumentRequest) {
+        Document document = documentService.createDocument(createDocumentRequest);
+        return ResponseEntity.created(null).body(document);
     }
 
     @Override
-    public ResponseEntity<List<com.dancea.schemaflex.api.model.Document>> getAllDocuments() {
-        List<com.dancea.schemaflex.data.Document> docs = documentService.getAllDocuments();
-        List<Document> apiDocs = docs.stream().map(d -> {
-            Document apiDoc = Document.builder()
-                    .id(d.getId())
-                    .name(d.getName())
-                    .schemaId(d.getSchemaId())
-                    .build();
-            try {
-                Map<String, Object> dataMap = objectMapper.readValue(
-                        d.getData(),
-                        new TypeReference<Map<String, Object>>() {
-                        });
-                apiDoc.setData(dataMap);
-            } catch (Exception e) {
-                apiDoc.setData(null);
-            }
-            return apiDoc;
-        }).collect(Collectors.toList());
+    public ResponseEntity<List<Document>> getAllDocuments() {
+        List<Document> apiDocs = documentService.getAllDocuments()
+                .stream()
+                .map(this::toApiDocument)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(apiDocs);
-
     }
 
     @Override
-    public ResponseEntity<com.dancea.schemaflex.api.model.Document> getDocumentById(Integer documentId) {
+    public ResponseEntity<Document> getDocumentById(Integer documentId) {
         com.dancea.schemaflex.data.Document d = documentService.getDocumentById(documentId);
-        Document apiDoc = Document.builder()
-                .id(d.getId())
-                .name(d.getName())
-                .schemaId(d.getSchemaId())
-                .build();
-        try {
-            Map<String, Object> dataMap = objectMapper.readValue(
-                    d.getData(),
-                    new TypeReference<Map<String, Object>>() {
-                    });
-            apiDoc.setData(dataMap);
-        } catch (Exception e) {
-            apiDoc.setData(null);
-        }
+        Document apiDoc = toApiDocument(d);
         return ResponseEntity.ok(apiDoc);
     }
 
     @Override
-    public ResponseEntity<com.dancea.schemaflex.api.model.Document> updateDocument(
-            UpdateDocumentRequest updateDocumentRequest) {
-        com.dancea.schemaflex.api.model.Document updatedDocument = documentService
-                .updateDocument(updateDocumentRequest);
-        return ResponseEntity.created(
-                null)
-                .body(updatedDocument);
+    public ResponseEntity<Document> updateDocument(UpdateDocumentRequest updateDocumentRequest) {
+        Document updatedDocument = documentService.updateDocument(updateDocumentRequest);
+        return ResponseEntity.created(null).body(updatedDocument);
+    }
 
+    private Document toApiDocument(com.dancea.schemaflex.data.Document d) {
+        return Document.builder()
+                .id(d.getId())
+                .name(d.getName())
+                .schemaId(d.getSchemaId())
+                .data(parseData(d.getData()))
+                .build();
+    }
+
+    private Map<String, Object> parseData(String data) {
+        try {
+            return objectMapper.readValue(data, new TypeReference<Map<String, Object>>() {
+            });
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
