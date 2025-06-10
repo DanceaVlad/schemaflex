@@ -12,10 +12,7 @@ import { JsonFormsModule } from '@jsonforms/angular';
 import { JsonFormsAngularMaterialModule, angularMaterialRenderers } from '@jsonforms/angular-material';
 import { ToastrService } from 'ngx-toastr';
 
-import { CreateDocumentRequest } from '../../../data/Document';
-import { Schema } from '../../../data/Schema';
-import { DocumentService } from '../../../services/document.service';
-import { SchemaService } from '../../../services/schema.service';
+import { CreateDocumentRequestDto, CustomSchemaDto, DocumentsService, SchemasService } from '@api/index';
 import { SaveDialogComponent } from '../save-dialog/save-dialog.component';
 
 @Component({
@@ -27,15 +24,15 @@ import { SaveDialogComponent } from '../save-dialog/save-dialog.component';
     schemas: [NO_ERRORS_SCHEMA],
 })
 export class CreateDocumentPageComponent {
-    schema: Schema | undefined;
+    schema: CustomSchemaDto | undefined;
     renderers = angularMaterialRenderers;
     readonly dialog = inject(MatDialog);
 
     data: any = {};
 
     constructor(
-        private schemaService: SchemaService,
-        private documentService: DocumentService,
+        private schemaService: SchemasService,
+        private documentService: DocumentsService,
         private toastr: ToastrService,
         private router: Router
     ) { }
@@ -50,7 +47,7 @@ export class CreateDocumentPageComponent {
         }
 
         this.schemaService.getSchemaById(schemaIdNumber).subscribe({
-            next: (schema: Schema) => {
+            next: (schema: CustomSchemaDto) => {
                 this.schema = schema;
             },
         });
@@ -61,9 +58,9 @@ export class CreateDocumentPageComponent {
 
         dialogRef.afterClosed().subscribe((name: string) => {
             if (name) {
-                const payload: CreateDocumentRequest = {
+                const payload: CreateDocumentRequestDto = {
                     name: name,
-                    schemaId: this.schema!.id,
+                    schemaId: this.schema!.id!,
                     data: this.data,
                 };
 

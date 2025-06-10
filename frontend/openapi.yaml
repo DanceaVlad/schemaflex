@@ -4,8 +4,8 @@ info:
   description: Dynamic saving and validation of forms based on Json Schemas
   version: "0.0.1"
 servers:
-  - url: "/"
-    description: Relative URL (uses application context root)
+  - url: "http://localhost:8080"
+    description: Dev backend
 paths:
   /schemas/all-schemas:
     get:
@@ -22,6 +22,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CustomSchema'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /schemas/schema/{schemaId}:
     get:
       tags:
@@ -41,6 +47,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomSchema'
+        '404':
+          description: resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /schemas/create-schema:
     post:
       tags:
@@ -56,6 +74,16 @@ paths:
       responses:
         '201':
           description: schema created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomSchema'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /documents/all-documents:
     get:
@@ -72,6 +100,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Document'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /documents/{documentId}:
     get:
       tags:
@@ -91,6 +125,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Document'
+        '404':
+          description: resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /documents/create-document:
     post:
       tags:
@@ -110,6 +156,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Document'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /documents/update-document:
     put:
       tags:
@@ -129,6 +181,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Document'
+        '404':
+          description: resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
 components:
   schemas:
@@ -207,3 +271,9 @@ components:
       required:
         - id
         - data
+
+    ErrorResponse:
+      type: object
+      additionalProperties:
+        type: string
+      description: Error response with a single key indicating the error type and the value as the error message.
