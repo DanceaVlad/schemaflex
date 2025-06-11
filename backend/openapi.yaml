@@ -7,7 +7,7 @@ servers:
   - url: "/"
     description: Relative URL (uses application context root)
 paths:
-  /schemas/all-schemas:
+  /schemas:
     get:
       tags:
         - Schemas
@@ -28,7 +28,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /schemas/schema/{schemaId}:
+    post:
+      tags:
+        - Schemas
+      summary: Create a new schema
+      operationId: createSchema
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSchemaRequest'
+      responses:
+        '201':
+          description: schema created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomSchema'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /schemas/{schemaId}:
     get:
       tags:
         - Schemas
@@ -59,33 +83,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /schemas/create-schema:
-    post:
-      tags:
-        - Schemas
-      summary: Create a new schema
-      operationId: createSchema
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateSchemaRequest'
-      responses:
-        '201':
-          description: schema created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomSchema'
-        '500':
-          description: internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /documents/all-documents:
+  /documents:
     get:
       tags:
         - Documents
@@ -106,38 +104,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /documents/{documentId}:
-    get:
-      tags:
-        - Documents
-      summary: Get document by ID
-      operationId: getDocumentById
-      parameters:
-        - in: path
-          name: documentId
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Document'
-        '404':
-          description: resource not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /documents/create-document:
     post:
       tags:
         - Documents
@@ -162,7 +128,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /documents/update-document:
     put:
       tags:
         - Documents
@@ -177,6 +142,37 @@ paths:
       responses:
         '200':
           description: document updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        '404':
+          description: resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /documents/{documentId}:
+    get:
+      tags:
+        - Documents
+      summary: Get document by ID
+      operationId: getDocumentById
+      parameters:
+        - in: path
+          name: documentId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
           content:
             application/json:
               schema:

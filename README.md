@@ -31,6 +31,26 @@ docker-compose up
 Navigate to http://localhost/4200 to access the demo.
 The backend lies under http://localhost/8080.
 
+## Dev experience
+
+Upon changing the openapi.yml file in one of the 2 parts, the change needs to be reflected into the other one.
+
+### Backend
+
+The easiest way to apply the change is to delete the target directory and to run:
+
+```bash
+mvn clean install
+```
+
+### Frontend
+
+Run the following command before serving:
+
+```bash
+npm run gen:api
+```
+
 ### VSCode Debugging Setup
 
 #### Backend
