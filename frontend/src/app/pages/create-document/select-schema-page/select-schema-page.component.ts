@@ -4,9 +4,8 @@ import { RouterModule } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
+import { CustomSchemaDto, SchemasService } from '@api/index';
 
-import { Schema } from '../../../data/Schema';
-import { SchemaService } from '../../../services/schema.service';
 
 @Component({
     selector: 'app-select-schema-page',
@@ -16,14 +15,14 @@ import { SchemaService } from '../../../services/schema.service';
     standalone: true,
 })
 export class SelectSchemaPageComponent implements OnInit {
-    schemas: Schema[] = [];
+    schemas: CustomSchemaDto[] = [];
 
-    constructor(private schemaService: SchemaService) {}
+    constructor(private schemaService: SchemasService) { }
 
     ngOnInit(): void {
         this.schemaService.getAllSchemas().subscribe({
             next: (response) => {
-                this.schemas = response.sort((a, b) => a.id - b.id);
+                this.schemas = response.sort((a, b) => a.id! - b.id!);
             },
         });
     }

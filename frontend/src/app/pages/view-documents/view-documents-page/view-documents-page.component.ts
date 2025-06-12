@@ -7,8 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 
-import { Document } from '../../../data/Document';
-import { DocumentService } from '../../../services/document.service';
+import { DocumentDto, DocumentsService } from '@api/index';
 import { DownloadDialogComponent } from '../download-dialog/download-dialog.component';
 
 export interface DialogData {
@@ -24,10 +23,10 @@ export interface DialogData {
     standalone: true,
 })
 export class ViewDocumentsPageComponent implements OnInit {
-    documents: Document[] = [];
+    documents: DocumentDto[] = [];
     readonly dialog = inject(MatDialog);
 
-    constructor(private documentService: DocumentService) {}
+    constructor(private documentService: DocumentsService) { }
 
     ngOnInit(): void {
         this.documentService.getAllDocuments().subscribe({

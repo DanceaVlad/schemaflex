@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.dancea.schemaflex.data.ChangeDocumentRequest;
-import com.dancea.schemaflex.data.CreateDocumentRequest;
+import com.dancea.schemaflex.api.model.CreateDocumentRequest;
+import com.dancea.schemaflex.api.model.UpdateDocumentRequest;
 import com.dancea.schemaflex.data.Document;
 import com.dancea.schemaflex.errors.ResourceNotFoundException;
 import com.dancea.schemaflex.repository.DocumentRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class DocumentService {
 
     private final DocumentRepository documentRepository;
+    private final ObjectMapper objectMapper;
 
     public List<Document> getAllDocuments() {
         return documentRepository.findAll();
@@ -27,29 +30,46 @@ public class DocumentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Document not found with ID: " + documentId));
     }
 
-    public void createDocument(CreateDocumentRequest createDocumentRequest) {
-
+    public com.dancea.schemaflex.api.model.Document createDocument(CreateDocumentRequest createDocumentRequest) {
         // TODO: Validate the document data against the schema
-
-        documentRepository.save(
+        JsonNode dataNode = objectMapper.convertValue(createDocumentRequest.getData(), JsonNode.class);
+        Document savedDocument = documentRepository.save(
                 Document.builder()
                         .name(createDocumentRequest.getName() == null || createDocumentRequest.getName().isEmpty()
                                 ? "Untitled"
                                 : createDocumentRequest.getName())
                         .schemaId(createDocumentRequest.getSchemaId())
-                        .data(createDocumentRequest.getData().toString())
+                        .data(dataNode.toString())
                         .build());
+
+        return com.dancea.schemaflex.api.model.Document.builder()
+                .id(savedDocument.getId())
+                .name(savedDocument.getName())
+                .schemaId(savedDocument.getSchemaId())
+                .data(objectMapper.convertValue(dataNode,
+                        new com.fasterxml.jackson.core.type.TypeReference<java.util.Map<String, Object>>() {
+                        }))
+                .build();
+
     }
 
-    public void updateDocument(ChangeDocumentRequest changeDocumentRequest) {
-        Document document = documentRepository.findById(changeDocumentRequest.getId())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Document not found with ID: " + changeDocumentRequest.getId()));
-
+    public com.dancea.schemaflex.api.model.Document updateDocument(UpdateDocumentRequest updateDocumentRequest) {
         // TODO: Validate the document data against the schema
+        Document document = documentRepository.findById(updateDocumentRequest.getId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Document not found with ID: " + updateDocumentRequest.getId()));
+        JsonNode dataNode = objectMapper.convertValue(updateDocumentRequest.getData(), JsonNode.class);
+        document.setData(dataNode.toString());
+        Document updatedDocument = documentRepository.save(document);
 
-        document.setData(changeDocumentRequest.getData().toString());
-        documentRepository.save(document);
+        return com.dancea.schemaflex.api.model.Document.builder()
+                .id(updatedDocument.getId())
+                .name(updatedDocument.getName())
+                .schemaId(updatedDocument.getSchemaId())
+                .data(objectMapper.convertValue(dataNode,
+                        new com.fasterxml.jackson.core.type.TypeReference<java.util.Map<String, Object>>() {
+                        }))
+                .build();
     }
 
 }

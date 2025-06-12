@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, NO_ERRORS_SCHEMA, Output } from '@angular/core';
+import { CustomSchemaDto } from '@api/index';
 
 import { JsonFormsModule } from '@jsonforms/angular';
 import { JsonFormsAngularMaterialModule, angularMaterialRenderers } from '@jsonforms/angular-material';
 
-import { Schema } from '../../data/Schema';
 
 @Component({
     selector: 'app-json-form',
@@ -15,7 +15,7 @@ import { Schema } from '../../data/Schema';
 })
 export class JsonFormComponent {
     @Input({ required: true })
-    schema: Schema | undefined;
+    schema: CustomSchemaDto | undefined;
     @Input()
     data = {};
     @Output()

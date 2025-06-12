@@ -1,44 +1,24 @@
 services:
-
-  # ---- production backend ----
   backend:
-    profiles: [ "prod" ]
     build:
       context: ./backend
     ports:
       - "8080:8080"
     restart: unless-stopped
+    networks:
+      - appnet
 
-  # ---- production frontend ----
   frontend:
-    profiles: [ "prod" ]
     build:
       context: ./frontend
-    ports:
-      - "80:80"
-    restart: unless-stopped
-
-  # ---- dev-only backend ----
-  backend-dev:
-    profiles: [ "dev" ]
-    image: maven:3.9-eclipse-temurin-21-alpine
-    working_dir: /app
-    volumes:
-      - ./backend:/app
-    command: >
-      mvn spring-boot:run -DskipTests -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
-    ports:
-      - "8080:8080"
-      - "5005:5005"
-
-  # ---- dev-only frontend ----
-  frontend-dev:
-    profiles: [ "dev" ]
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
     ports:
       - "4200:4200"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - appnet
+
+networks:
+  appnet:
+    driver: bridge

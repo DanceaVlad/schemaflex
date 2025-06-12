@@ -22,7 +22,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "_schemas")
-public class Schema {
+public class CustomSchema {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

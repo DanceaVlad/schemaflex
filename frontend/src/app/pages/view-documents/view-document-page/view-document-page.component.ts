@@ -7,12 +7,9 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { JsonFormComponent } from '../../../component/json-form/json-form.component';
 
+import { CustomSchemaDto, DocumentDto, DocumentsService, SchemasService, UpdateDocumentRequestDto } from '@api/index';
 import { ToastrService } from 'ngx-toastr';
 
-import { Document } from '../../../data/Document';
-import { Schema } from '../../../data/Schema';
-import { DocumentService } from '../../../services/document.service';
-import { SchemaService } from '../../../services/schema.service';
 
 @Component({
     selector: 'app-view-document-page',
@@ -21,16 +18,16 @@ import { SchemaService } from '../../../services/schema.service';
     styleUrl: './view-document-page.component.scss',
 })
 export class ViewDocumentPageComponent implements OnInit {
-    document: Document | undefined;
-    schema: Schema | undefined;
+    document: DocumentDto | undefined;
+    schema: CustomSchemaDto | undefined;
     data: any = {};
 
     constructor(
         private toastr: ToastrService,
-        private documentService: DocumentService,
-        private schemaService: SchemaService,
+        private documentService: DocumentsService,
+        private schemaService: SchemasService,
         private router: Router
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         const url = window.location.href;
@@ -42,11 +39,11 @@ export class ViewDocumentPageComponent implements OnInit {
         }
 
         this.documentService.getDocumentById(documentIdNumber).subscribe({
-            next: (document: Document) => {
+            next: (document: DocumentDto) => {
                 this.document = document;
                 this.data = typeof document.data === 'string' ? JSON.parse(document.data) : document.data;
                 this.schemaService.getSchemaById(document.schemaId).subscribe({
-                    next: (schema: Schema) => {
+                    next: (schema: CustomSchemaDto) => {
                         this.schema = schema;
                     },
                 });
@@ -65,18 +62,14 @@ export class ViewDocumentPageComponent implements OnInit {
             return;
         }
 
-        const payload = {
-            id: this.document.id,
-            data: JSON.stringify(this.data),
+        const payload: UpdateDocumentRequestDto = {
+            id: this.document.id!,
+            data: this.data,
         };
 
         this.documentService.updateDocument(payload).subscribe({
             next: () => {
                 this.toastr.success('Document updated successfully', 'Success');
-                this.router.navigate(['/home']);
-            },
-            error: (error) => {
-                this.toastr.error('Failed to update document', 'Error');
                 this.router.navigate(['/home']);
             },
         });

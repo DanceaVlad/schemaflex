@@ -1,0 +1,275 @@
+openapi: 3.0.1
+info:
+  title: SchemaFlex API
+  description: Dynamic saving and validation of forms based on Json Schemas
+  version: "0.0.1"
+servers:
+  - url: "http://localhost:8080"
+    description: Dev backend
+paths:
+  /schemas:
+    get:
+      tags:
+        - Schemas
+      summary: Get all schemas
+      operationId: getAllSchemas
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomSchema'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - Schemas
+      summary: Create a new schema
+      operationId: createSchema
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSchemaRequest'
+      responses:
+        '201':
+          description: schema created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomSchema'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /schemas/{schemaId}:
+    get:
+      tags:
+        - Schemas
+      summary: Get schema by ID
+      operationId: getSchemaById
+      parameters:
+        - in: path
+          name: schemaId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomSchema'
+        '404':
+          description: resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /documents:
+    get:
+      tags:
+        - Documents
+      summary: Get all documents
+      operationId: getAllDocuments
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Document'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - Documents
+      summary: Create a new document
+      operationId: createDocument
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDocumentRequest'
+      responses:
+        '201':
+          description: document created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Documents
+      summary: Update an existing document
+      operationId: updateDocument
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDocumentRequest'
+      responses:
+        '200':
+          description: document updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        '404':
+          description: resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /documents/{documentId}:
+    get:
+      tags:
+        - Documents
+      summary: Get document by ID
+      operationId: getDocumentById
+      parameters:
+        - in: path
+          name: documentId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        '404':
+          description: resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    CustomSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        uiSchema:
+          type: object
+          additionalProperties: true
+        dataSchema:
+          type: object
+          additionalProperties: true
+      required:
+        - name
+        - dataSchema
+
+    Document:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        schemaId:
+          type: integer
+        data:
+          type: object
+          additionalProperties: true
+      required:
+        - schemaId
+        - data
+
+    CreateSchemaRequest:
+      type: object
+      properties:
+        schemaName:
+          type: string
+        dataSchema:
+          type: object
+          additionalProperties: true
+        uiSchema:
+          type: object
+          additionalProperties: true
+        saveAsFile:
+          type: boolean
+      required:
+        - schemaName
+        - dataSchema
+
+    CreateDocumentRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        schemaId:
+          type: integer
+        data:
+          type: object
+          additionalProperties: true
+      required:
+        - schemaId
+        - data
+
+    UpdateDocumentRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        data:
+          type: object
+          additionalProperties: true
+      required:
+        - id
+        - data
+
+    ErrorResponse:
+      type: object
+      additionalProperties:
+        type: string
+      description: Error response with a single key indicating the error type and the value as the error message.
