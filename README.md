@@ -16,12 +16,6 @@ git clone https://github.com/DanceaVlad/schemaflex.git
 
 ### Running the project
 
-(Temporary) checkout the feature branch with the following command
-
-```bash
-git checkout 2-open-api
-```
-
 To run the application navigate in the terminal to /schemaflex and use the following command:
 
 ```bash
