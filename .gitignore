@@ -42,3 +42,5 @@ build/
 .vscode/
 
 HELP.md
+/latex/out/
+!/latex/out/main.pdf

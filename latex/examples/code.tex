@@ -1,0 +1,24 @@
+\usepackage{listings}
+
+\begin{lstlisting}[firstnumber=1,caption={Short caption},label={label}]
+%FEM2D two-dimensional finite element method for Laplacian.
+% Initialisation
+load coordinates.dat; coordinates(:,1)=[];
+eval('load elements3.dat; elements3(:,1)=[];','elements3=[];');
+eval('load elements4.dat; elements4(:,1)=[];','elements4=[];');
+eval('load neumann.dat; neumann(:,1) = [];','neumann=[];');
+load dirichlet.dat; dirichlet(:,1) = [];
+FreeNodes=@setdiff@(1:size(coordinates,1),unique(dirichlet));
+A = sparse(size(coordinates,1),size(coordinates,1));
+b = sparse(size(coordinates,1),1);
+
+% Assembly
+for j = 1:size(elements3,1)
+  A(elements3(j,:),elements3(j,:)) = A(elements3(j,:),elements3(j,:)) ...
+      + stima3(coordinates(elements3(j,:),:));
+end
+for j = 1:size(elements4,1)
+  A(elements4(j,:),elements4(j,:)) = A(elements4(j,:),elements4(j,:)) ...
+      + stima4(coordinates(elements4(j,:),:));
+end
+\end{lstlisting}

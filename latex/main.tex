@@ -1,0 +1,93 @@
+\documentclass{utils/BachelorBUI}
+
+\usepackage[utf8]{inputenc}
+\RequirePackage[babel,austrian=quotes,english=american]{csquotes}
+
+\raggedbottom
+
+\lstset{
+    language={Matlab},
+}
+
+\sisetup{output-decimal-marker = {,},
+    range-phrase = --,
+    group-separator = {~},
+    per-mode = symbol,
+    list-final-separator={ und }}
+
+\graphicspath{{images/}}
+
+\newcommand{\zB}{\mbox{z.\,B.}\xspace}
+\newcommand{\Name}[1]{\textsc{#1}}
+
+\newcommand{\vKTxv}{\mathbf{v}_1^T\tilde{\mathbf{K}}_{T},_{\xi}\mathbf{v}_1}
+\newcommand{\vKTxxv}{\mathbf{v}_1^T\tilde{\mathbf{K}}_{T},_{\xi\xi}\mathbf{v}_1}
+
+\usepackage[style=numeric-comp,backend=biber,maxcitenames=2]{biblatex}
+\ExecuteBibliographyOptions{%
+    giveninits=true,maxbibnames=99}%
+\DefineBibliographyStrings{english}{%
+    andothers={et\;al\adddot},
+    urlseen = {Zugriff am}
+}
+\addbibresource{utils/literature.bib}
+
+\usepackage{acro}
+\acsetup{list/display=used}
+
+\input{utils/acronyms}
+
+\setcounter{biburllcpenalty}{9000}
+\setcounter{biburlucpenalty}{9000}
+\title{Schema-First Design in Web Apps: Integrating Angular, JsonForms and Spring Boot}
+\authorname{Vlad-Ioan Dancea}
+\email{danceavlad@icloud.com}
+\MatrNr{12123455}
+\thesislanguage{en-US}                        %% (de-AT, de-DE, en-GB, en-US)
+\keywords{bachelor thesis\sep template\sep LaTeX}
+
+\begin{document}
+
+    \selectlanguage{english}
+
+    \begin{filecontents}[overwrite]{\jobname.xmpdata}
+        \makeatletter
+        \Title{\@title}
+        \Author{\@authorname}
+        \Language{\@thesislanguage}
+        \Keywords{\@keywords}
+        \Publisher{TU Wien}
+        \makeatother
+    \end{filecontents}
+
+    \maketitle
+
+    %%%%%%%%%%%%%%%% Examples %%%%%%%%%%%%%%
+    % Citation
+    % \cite{Alberty:1999}
+
+    % Footnote
+    % \footnote{This is a footnote.}
+
+    % Equation
+    % \input{examples/equation}
+
+    % Graphic
+    % \input{examples/graphic}
+
+    % Table
+    % \input{examples/table}
+
+    % Code
+    % \input{examples/code}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \input{chapters/00_abstract}
+
+    \tableofcontents
+    
+    \input{chapters/01_introduction}
+
+    \printbibliography
+
+\end{document}
