@@ -28,7 +28,10 @@
     giveninits=true,maxbibnames=99}%
 \DefineBibliographyStrings{english}{%
     andothers={et\;al\adddot},
-    urlseen = {Zugriff am}
+    urlseen={Accessed on\addcolon}
+}
+\DeclareFieldFormat{url}{%
+    Available online\addcolon\space\url{#1}%
 }
 \addbibresource{utils/literature.bib}
 
@@ -39,7 +42,7 @@
 
 \setcounter{biburllcpenalty}{9000}
 \setcounter{biburlucpenalty}{9000}
-\title{Schema-First Design in Web Apps: Integrating Angular, JsonForms and Spring Boot}
+\title{Schema-First Design of Forms in Web Apps: Integrating Angular, JsonForms and Spring Boot}
 \authorname{Vlad-Ioan Dancea}
 \email{danceavlad@icloud.com}
 \MatrNr{12123455}
@@ -87,6 +90,10 @@
     \tableofcontents
     
     \input{chapters/01_introduction}
+
+    \input{chapters/02_background}
+
+    \input{chapters/03_problem}
 
     \printbibliography
 

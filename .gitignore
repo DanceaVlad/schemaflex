@@ -37,10 +37,11 @@ build/
 # Device
 **/.DS_Store
 **/Thumbs.db
+HELP.md
 
 ### VS Code ###
 .vscode/
 
-HELP.md
 /latex/out/
 !/latex/out/main.pdf
+.run/main.run.xml
