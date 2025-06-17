@@ -1,0 +1,420 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Group",
+      "label": "DMP Contact Information",
+      "elements": [
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "scope": "#/properties/dmp/properties/contact/properties/contact_id/properties/identifier",
+              "options": {
+                "autocomplete": true,
+                "options": [
+                  "apple",
+                  "banana",
+                  "cherry",
+                  "date",
+                  "elderberry",
+                  "fig",
+                  "grape",
+                  "honeydew",
+                  "kiwi",
+                  "lemon",
+                  "mango",
+                  "nectarine",
+                  "orange",
+                  "papaya",
+                  "quince",
+                  "raspberry"
+                ]
+
+              }
+            },
+            {
+              "type": "Control",
+              "scope": "#/properties/dmp/properties/contact/properties/contact_id/properties/type"
+            }
+          ]
+        },
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "scope": "#/properties/dmp/properties/contact/properties/name"
+            },
+            {
+              "type": "Control",
+              "scope": "#/properties/dmp/properties/contact/properties/mbox"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Group",
+      "label": "DMP Basic Information",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/dmp/properties/title"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/dmp/properties/description",
+          "options": {
+            "multi": true
+          }
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/dmp/properties/created"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/dmp/properties/modified"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/dmp/properties/language"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/dmp/properties/ethical_issues_exist"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/dmp/properties/ethical_issues_description",
+          "options": {
+            "multi": true
+          },
+          "rule": {
+            "effect": "SHOW",
+            "condition": {
+              "scope": "#/properties/dmp/properties/ethical_issues_exist",
+              "schema": {
+                "const": "yes"
+              }
+            }
+          }
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/dmp/properties/ethical_issues_report",
+          "rule": {
+            "effect": "SHOW",
+            "condition": {
+              "scope": "#/properties/dmp/properties/ethical_issues_exist",
+              "schema": {
+                "const": "yes"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "Group",
+      "label": "DMP Identifiers",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/dmp/properties/dmp_id"
+        }
+      ]
+    },
+    {
+      "type": "Group",
+      "label": "Contributors",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/dmp/properties/contributor",
+          "options": {
+            "detail": {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/contributor_id/properties/identifier"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/contributor_id/properties/type"
+                    }
+                  ]
+                },
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/name"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/mbox"
+                    }
+                  ]
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/role"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "Group",
+      "label": "Project Information",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/dmp/properties/project"
+        }
+      ]
+    },
+    {
+      "type": "Group",
+      "label": "Datasets",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/dmp/properties/dataset",
+          "options": {
+            "detail": {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "Group",
+                  "label": "Dataset Basic Information",
+                  "elements": [
+                    {
+                      "type": "HorizontalLayout",
+                      "elements": [
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/dataset_id/properties/identifier"
+                        },
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/dataset_id/properties/type"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/title"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/description",
+                      "options": {
+                        "multi": true
+                      }
+                    },
+                    {
+                      "type": "HorizontalLayout",
+                      "elements": [
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/issued"
+                        },
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/language"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/keyword"
+                    }
+                  ]
+                },
+                {
+                  "type": "Group",
+                  "label": "Data Quality Assurance",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/data_quality_assurance"
+                    }
+                  ]
+                },
+                {
+                  "type": "Group",
+                  "label": "Dataset Distribution",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/distribution",
+                      "options": {
+                        "detail": {
+                          "type": "VerticalLayout",
+                          "elements": [
+                            {
+                              "type": "Control",
+                              "scope": "#/properties/title"
+                            },
+                            {
+                              "type": "Control",
+                              "scope": "#/properties/description",
+                              "options": {
+                                "multi": true
+                              }
+                            },
+                            {
+                              "type": "HorizontalLayout",
+                              "elements": [
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/data_access"
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/byte_size"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "HorizontalLayout",
+                              "elements": [
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/access_url"
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/download_url"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "HorizontalLayout",
+                              "elements": [
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/available_until"
+                                },
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/format"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Group",
+                              "label": "Host Information",
+                              "elements": [
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/host"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "Group",
+                              "label": "License Information",
+                              "elements": [
+                                {
+                                  "type": "Control",
+                                  "scope": "#/properties/license"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Group",
+                  "label": "Metadata",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/metadata"
+                    }
+                  ]
+                },
+                {
+                  "type": "Group",
+                  "label": "Security & Privacy",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/security_and_privacy"
+                    }
+                  ]
+                },
+                {
+                  "type": "Group",
+                  "label": "Technical Resources",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/technical_resource"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "Group",
+      "label": "Costs",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/dmp/properties/cost",
+          "options": {
+            "detail": {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "Control",
+                  "scope": "#/properties/title"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/description",
+                  "options": {
+                    "multi": true
+                  }
+                },
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/value"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/currency_code"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

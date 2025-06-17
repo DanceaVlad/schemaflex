@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
-import { JsonFormComponent } from '../../../component/json-form/json-form.component';
+import { JsonFormComponent } from '../../../component/json-form.component';
 
 import { CustomSchemaDto, DocumentDto, DocumentsService, SchemasService, UpdateDocumentRequestDto } from '@api/index';
 import { ToastrService } from 'ngx-toastr';

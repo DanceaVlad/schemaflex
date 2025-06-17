@@ -6,7 +6,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
 
-import { JsonFormComponent } from '../../../component/json-form/json-form.component';
+import { JsonFormComponent } from '../../../component/json-form.component';
 
 import { JsonFormsModule } from '@jsonforms/angular';
 import { JsonFormsAngularMaterialModule, angularMaterialRenderers } from '@jsonforms/angular-material';
