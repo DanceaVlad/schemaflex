@@ -1,3 +1,4 @@
+\usepackage{listings}
 \section{Background}
 
 Before proposing and analyzing the new approach to form creation, it is important to understand the current state of
@@ -5,4 +6,163 @@ form development both in the context of the project and in general.
 
 \subsection{Current Approach to Form Creation in Angular}
 
-As highlighted in Angular's own documentation\cite{Angular:forms}
+As highlighted in Angular's own documentation\cite{Angular:forms}, there are two main approaches to form creation, which
+we will refer to as the \textit{template-driven} and \textit{reactive} approaches.
+The consensus is that the template-driven approach is more suitable for simple forms, while the reactive approach is
+better for complex forms.
+We will focus on the reactive approach, as it is the one more suited for the project at hand, which requires complex
+forms, but we will also briefly discuss the template-driven approach for completeness.
+
+\subsubsection{Template-Driven Forms}
+
+Template-driven forms are built largely in the component’s HTML template using the \texttt{FormsModule} directives such
+as \texttt{ngModel}, \texttt{ngModelGroup,} and \texttt{ngForm}.
+Every control in the template automatically creates an underlying \texttt{FormControl} instance, so there is minimal
+TypeScript boilerplate.
+
+A typical template-driven form might look like this:
+\paragraph{HTML}
+\begin{lstlisting}[language=HTML]
+<form #form="ngForm" (ngSubmit)="onSubmit(form)">
+  <div>
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" ngModel required>
+  </div>
+  <div>
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" ngModel email>
+  </div>
+  <button type="submit">Submit</button>
+</form>
+\end{lstlisting}
+
+While quick to set up, this approach can become unwieldy as forms grow—implicit control creation hinders reuse, and
+testing template logic is harder.
+
+\subsubsection{Reactive Forms}
+
+Reactive forms live in the component class as a defined data model (\texttt{FormGroup}, \texttt{FormControl}), offering
+full control over validation, dynamic fields and testability.
+
+\paragraph{HTML}
+\begin{lstlisting}[language=HTML]
+<form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="name">Name</label>
+    <input id="name" formControlName="name"/>
+  </div>
+  <div>
+    <label for="email">Email</label>
+    <input id="email" formControlName="email"/>
+  </div>
+  <button type="submit">Submit</button>
+</form>
+\end{lstlisting}
+
+\paragraph{TypeScript}
+\begin{lstlisting}[language=TypeScript]
+
+  contactForm!: FormGroup;
+
+  this.contactForm = new FormGroup({
+    name: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    subscribe: new FormControl(false)
+  });
+\end{lstlisting}
+
+Reactive forms provide:
+\begin{itemize}
+  \item \textbf{Dynamic fields:} ability to add or remove controls at runtime.
+  \item \textbf{Explicit model:} full control over the form’s structure in TypeScript.
+  \item \textbf{Testability:} ability to unit-test validation and control logic directly.
+  \item \textbf{Type safety:} stronger guarantees with TypeScript typings.
+\end{itemize}
+
+In large‐scale applications like ours—with dynamic schemas, custom widgets and complex validation—reactive forms are
+the recommended practice.
+
+\subsection{Other Necessities}
+In addition to the pure forms, the project requires many more features that heavily bloat the code, such as:
+
+\begin{itemize}
+  \item \textbf{Custom widgets:} Angular Material, PrimeNG, etc.
+  \item \textbf{Validation:} both client-side and server-side.
+  \item \textbf{State management:} for complex forms with multiple steps.
+\end{itemize}
+
+Before analyzing the new approach, these additional features must be considered, as they are essential for the
+project and will influence the design of the new approach.
+
+\subsubsection{Custom Widgets}
+
+Angular provides a powerful suite of UI components through libraries like Angular Material and PrimeNG\@.
+These components can be easily integrated into reactive forms, allowing for both prettier forms and a better user
+experience.
+Useful components include MatCard, MatInput, MatSelect, MatCheckbox and many more.
+This, however, does not come without a cost, as it requires additional code to integrate these.
+A standard approach using Angular Material might look like this:
+
+\paragraph{HTML}
+\begin{lstlisting}[language=HTML]
+  <mat-card>
+    <mat-card-content>
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput id="name" formControlName="name"/>
+      </mat-form-field>
+      <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email"/>
+      </mat-form-field>
+      <button mat-raised-button type="submit">Submit</button>
+    </mat-card-content>
+  </mat-card>
+\end{lstlisting}
+
+This extra wiring code adds to per-form boilerplate and motivates a schema-driven solution.
+
+\subsubsection{Validation}
+
+Validation is a crucial part of any form, and Angular provides a powerful validation framework that has two applications:
+immediate client-side validation, which is shown to the user as they fill out the form, and the ability to also show
+server-side validation errors, which are returned from the server after the form is submitted.
+This is especially useful for complex forms where the server might have additional validation rules that cannot be easily
+implemented on the client-side.
+Thus using an error framework that supports both synchronous and asynchronous validation is essential.
+
+Here is an example of how validation can be implemented in Angular with the MatError component:
+
+\paragraph{HTML}
+\begin{lstlisting}[language=HTML]
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input matInput id="name" formControlName="name"/>
+    @for (error of contactForm.controls['name'].errors; track error.message) {
+      <mat-error>{{ error.message }}</mat-error>
+    }
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email"/>
+    @for (error of contactForm.controls['email'].errors; track error.message) {
+      <mat-error>{{ error.message }}</mat-error>
+    }
+  </mat-form-field>
+\end{lstlisting}
+
+For each form control, we can define validation rules in the TypeScript code, which will be reflected in the HTML template.
+But this leads to a lot of boilerplate and repetitive code, especially for large forms with many fields.
+
+\subsubsection{State Management}
+
+State management is another important aspect of complex forms, especially when dealing with multistep forms or forms
+that require data to be shared between different components.
+This can be achieved using popular libraries like NgRx or even with Angular's built-in signals.
+Because the proposed approach also requires the developer to handmake components when NgRx or signals are used,
+we will not go into detail about this, as it is not the focus of this thesis.
+Suffice it to say that whatever state management is needed in the traditional approach, it will also be necessary in the
+new approach.
+
+Now that we have a good understanding of the current state of form creation in Angular, we can move on to analyzing the
+problem with the current approach and the objectives of the new approach.
