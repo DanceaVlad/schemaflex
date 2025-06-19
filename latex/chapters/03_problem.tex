@@ -2,8 +2,10 @@
 
 \subsection{Problem Statement}
 The current hands-on form development, while concrete and concise, is rigid and hard to adapt across projects.
-Due to the requirement of the ability to change the appearance of the forms for each project user, the current approach
-leads to many problems with the maintainability of the code.
+Because each project user may require custom styling, the current approach leads to many problems with the maintainability
+of the code.
+This is because each version of the form must be kept in sync with the others: when one core change is made, all current
+versions of the form must be updated.
 
 Aside from the maintainability, the current approach also suffers from lots of redundancy in the code.
 Forms share many common elements, such as labels, input fields, and buttons, yet the current approach duplicates code
@@ -16,9 +18,9 @@ creation, one that successfully addresses the problems of the current approach.
 More specifically, the goals are:
 
 \begin{itemize}
-    \item To analyze how much boilerplate and duplication exist in the current form creation approach.
-    \item To design a schema-driven approach that unifies the form creation logic and supports custom appearance for each
-    project.
-    \item To implement a prototype of the new approach and evaluate developer productivity and maintainability.
-    \item To recommend whether the new approach is feasible for production use and the best approaches for going forward.
+\item \textbf{Quantify the current boilerplate.} Analyze representative forms in the current codebase.
+\item \textbf{Design a unified schema approach.} Define a schema-driven approach that unifies the form creation logic and
+    supports custom appearance for each project.
+\item \textbf{Implement a prototype.} Build and test an end-to-end JsonForms proof-of-concept, then measure dev effort and maintainability.
+\item \textbf{Recommend feasibility.} Evaluate production readiness and outline next steps for adoption.
 \end{itemize}

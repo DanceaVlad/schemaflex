@@ -21,8 +21,7 @@ Every control in the template automatically creates an underlying \texttt{FormCo
 TypeScript boilerplate.
 
 A typical template-driven form might look like this:
-\paragraph{HTML}
-\begin{lstlisting}[language=HTML]
+\begin{lstlisting}[language=HTML,caption={Template-Driven Form HTML}, label={lst:templateHTML}]
 <form #form="ngForm" (ngSubmit)="onSubmit(form)">
   <div>
     <label for="name">Name</label>
@@ -44,8 +43,7 @@ testing template logic is harder.
 Reactive forms live in the component class as a defined data model (\texttt{FormGroup}, \texttt{FormControl}), offering
 full control over validation, dynamic fields and testability.
 
-\paragraph{HTML}
-\begin{lstlisting}[language=HTML]
+\begin{lstlisting}[language=HTML,caption={Reactive Form HTML}, label={lst:reactiveHTML}]
 <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
   <div>
     <label for="name">Name</label>
@@ -59,9 +57,7 @@ full control over validation, dynamic fields and testability.
 </form>
 \end{lstlisting}
 
-\paragraph{TypeScript}
-\begin{lstlisting}[language=TypeScript]
-
+\begin{lstlisting}[language=HTML,caption={Reactive Form TS}, label={lst:reactiveTS}]
   contactForm!: FormGroup;
 
   this.contactForm = new FormGroup({
@@ -103,8 +99,7 @@ Useful components include MatCard, MatInput, MatSelect, MatCheckbox and many mor
 This, however, does not come without a cost, as it requires additional code to integrate these.
 A standard approach using Angular Material might look like this:
 
-\paragraph{HTML}
-\begin{lstlisting}[language=HTML]
+\begin{lstlisting}[language=HTML,caption={Angular Material HTML}, label={lst:materialHTML}]
   <mat-card>
     <mat-card-content>
       <mat-form-field>
@@ -133,8 +128,7 @@ Thus using an error framework that supports both synchronous and asynchronous va
 
 Here is an example of how validation can be implemented in Angular with the MatError component:
 
-\paragraph{HTML}
-\begin{lstlisting}[language=HTML]
+\begin{lstlisting}[language=HTML,caption={Errors in HTML}, label={lst:errorsHTML}]
   <mat-form-field>
     <mat-label>Name</mat-label>
     <input matInput id="name" formControlName="name"/>
