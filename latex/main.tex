@@ -1,70 +1,142 @@
-\documentclass{utils/BachelorBUI}
+\documentclass{utils/vutinfth}
 
-\usepackage[utf8]{inputenc}
-\RequirePackage[babel,austrian=quotes,english=american]{csquotes}
+\newcommand{\authorname}{Vlad-Ioan Dancea}
+\newcommand{\thesistitle}{Schema-First Design of Forms in Web Apps: Integrating Angular, JsonForms and Spring Boot}
+\newcommand{\thesissubtitle}{}
 
-\raggedbottom
+\begin{filecontents*}[overwrite]{\jobname.xmpdata}
+    \Author{\authorname}                                    % The author's name in the document properties.
+    \Title{\thesistitle}                                    % The document's title in the document properties.
+    \Language{en-US}                                        % The document's language in the document properties. Select 'en-US', 'en-GB', or 'de-AT'.
+    \Keywords{a\sep list\sep of\sep keywords}               % The document's keywords in the document properties (separated by '\sep ').
+    \Publisher{TU Wien}                                     % The document's publisher in the document properties.
+    \Subject{Thesis}                                        % The document's subject in the document properties.
+\end{filecontents*}
 
-\lstset{
-    language={Matlab},
-}
+\usepackage{lmodern}        % Use an extension of the original Computer Modern font to minimize the use of bitmapped letters.
+\usepackage[T1]{fontenc}    % Determines font encoding of the output. Font packages have to be included before this line.
+\usepackage[utf8]{inputenc} % Determines encoding of the input. All input files have to use UTF8 encoding.
 
-\sisetup{output-decimal-marker = {,},
-    range-phrase = --,
-    group-separator = {~},
-    per-mode = symbol,
-    list-final-separator={ und }}
+\usepackage{amsmath}    % Extended typesetting of mathematical expression.
+\usepackage{amssymb}    % Provides a multitude of mathematical symbols.
+\usepackage{mathtools}  % Further extensions of mathematical typesetting.
+\usepackage{microtype}  % Small-scale typographic enhancements.
+\usepackage[inline]{enumitem} % User control over the layout of lists (itemize, enumerate, description).
+\usepackage{multirow}   % Allows table elements to span several rows.
+\usepackage{booktabs}   % Improves the typesetting of tables.
+\usepackage{subcaption} % Allows the use of subfigures and enables their referencing.
+\usepackage[ruled,linesnumbered,algochapter]{algorithm2e} % Enables the writing of pseudo code.
+\usepackage[dvipsnames,table]{xcolor} % Allows the definition and use of colors. This package has to be included before tikz.
+\usepackage{nag}        % Issues warnings when best practices in writing LaTeX documents are violated.
+\usepackage{todonotes}  % Provides tooltip-like todo notes.
+\usepackage{morewrites} % Increases the number of external files that can be used.
+\usepackage{listings} % Enables the typesetting of source code.
+\usepackage[style=numeric,backend=biber]{biblatex} % Enables the typesetting of bibliographies.
+\usepackage[a-2b,mathxmp]{pdfx}      % Enables PDF/A compliance. Loads the package hyperref and has to be included second to last.
+\usepackage[acronym,toc]{glossaries} % Enables the generation of glossaries and lists of acronyms. This package has to be included last.
 
-\graphicspath{{images/}}
 
-\newcommand{\zB}{\mbox{z.\,B.}\xspace}
-\newcommand{\Name}[1]{\textsc{#1}}
-
-\newcommand{\vKTxv}{\mathbf{v}_1^T\tilde{\mathbf{K}}_{T},_{\xi}\mathbf{v}_1}
-\newcommand{\vKTxxv}{\mathbf{v}_1^T\tilde{\mathbf{K}}_{T},_{\xi\xi}\mathbf{v}_1}
-
-\usepackage[style=numeric-comp,backend=biber,maxcitenames=2]{biblatex}
-\ExecuteBibliographyOptions{%
-    giveninits=true,maxbibnames=99}%
-\DefineBibliographyStrings{english}{%
-    andothers={et\;al\adddot},
-    urlseen={Accessed on\addcolon}
-}
-\DeclareFieldFormat{url}{%
-    Available online\addcolon\space\url{#1}%
-}
 \addbibresource{utils/literature.bib}
 
-\usepackage{acro}
-\acsetup{list/display=used}
+%% Customize Listing
+\lstset{
+    basicstyle=\footnotesize\ttfamily,
+    keywordstyle=\color{blue}\bfseries,
+    tabsize=3,
+    breaklines=true,
+    showstringspaces=false,
+    upquote=true,
+    xleftmargin=4mm,
+    xrightmargin=.25in,
+    aboveskip=15pt,
+    belowskip=12pt,
+    belowcaptionskip=12pt,
+    numbers=left,
+    numberstyle=\tiny,
+    frame=tb,
+    moredelim=**[is][\color{blue}]{@}{@}
+}
+\lstset{literate=%
+    {Ö}{{\"O}}1
+    {Ä}{{\"A}}1
+    {Ü}{{\"U}}1
+    {ß}{{\ss}}1
+    {ü}{{\"u}}1
+    {ä}{{\"a}}1
+    {ö}{{\"o}}1
+}
 
-\input{utils/acronyms}
+\hypersetup{
+    linkbordercolor = {Melon},                % The color of the borders of boxes around hyperlinks (optional).
+}
 
-\setcounter{biburllcpenalty}{9000}
-\setcounter{biburlucpenalty}{9000}
-\title{Schema-First Design of Forms in Web Apps: Integrating Angular, JsonForms and Spring Boot}
-\authorname{Vlad-Ioan Dancea}
-\email{danceavlad@icloud.com}
-\MatrNr{12123455}
-\thesislanguage{en-US}                        %% (de-AT, de-DE, en-GB, en-US)
-\keywords{bachelor thesis\sep template\sep LaTeX}
+\setpnumwidth{2.5em}        % Avoid overfull hboxes in the table of contents (see memoir manual).
+\setsecnumdepth{subsection} % Enumerate subsections.
+
+\nonzeroparskip             % Create space between paragraphs (optional).
+\setlength{\parindent}{0pt} % Remove paragraph indentation (optional).
+
+\makeindex      % Use an optional index.
+\makeglossaries % Use an optional glossary.
+%\glstocfalse   % Remove the glossaries from the table of contents.
+
+\setauthor{}{\authorname}{}{male}
+\setadvisor{}{Tomasz Miksa}{}{male}
+
+\setfirstassistant{}{Nova Bonic}{}{female}
+
+\setregnumber{12123455}
+\setdate{17}{06}{2025}
+\settitle{\thesistitle}{}
+\setsubtitle{\thesissubtitle}{}
+\setthesis{bachelor}
+\setcurriculum{Media Informatics and Visual Computing}{Medieninformatik und Visual Computing} % Sets the English and German name of the curriculum.
+\setfirstreviewerdata{Affiliation, Country}
 
 \begin{document}
 
+    \frontmatter
+
+    \addtitlepage{english}
+    \addstatementpage
+
+    \begin{acknowledgements*}
+        \todo{Enter your text here.}
+    \end{acknowledgements*}
+
+    \input{chapters/00_abstract}
+
     \selectlanguage{english}
 
-    \begin{filecontents}[overwrite]{\jobname.xmpdata}
-        \makeatletter
-        \Title{\@title}
-        \Author{\@authorname}
-        \Language{\@thesislanguage}
-        \Keywords{\@keywords}
-        \Publisher{TU Wien}
-        \makeatother
-    \end{filecontents}
+    \tableofcontents
 
-    \maketitle
+    \mainmatter
 
+    \input{chapters/01_introduction}
+
+    \input{chapters/02_background}
+
+    \input{chapters/03_problem}
+
+    \printbibliography[title=References,heading=bibintoc]
+
+    \backmatter
+
+    \begin{aitools}
+        \todo{Ihr Text hier.}
+    \end{aitools}
+
+    \listoffigures
+
+    \cleardoublepage
+    \listoftables
+
+    \listofalgorithms
+    \addcontentsline{toc}{chapter}{List of Algorithms}
+
+    \printindex
+
+    \printglossaries
     %%%%%%%%%%%%%%%% Examples %%%%%%%%%%%%%%
     % Citation
     % \cite{Alberty:1999}
@@ -84,17 +156,5 @@
     % Code
     % \input{examples/code}
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-    \input{chapters/00_abstract}
-
-    \tableofcontents
-    
-    \input{chapters/01_introduction}
-
-    \input{chapters/02_background}
-
-    \input{chapters/03_problem}
-
-    \printbibliography
 
 \end{document}
